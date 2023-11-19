@@ -11,12 +11,11 @@ public class TrainDeparture {
   private String track;
 
   public TrainDeparture(final String trainNumber, final String line, final String destination,
-                        final LocalTime departureTime, final LocalTime delay, final String track) {
+                        final LocalTime departureTime, final String track) {
     this.trainNumber = trainNumber;
     this.line = line;
     this.destination = destination;
     this.departureTime = departureTime;
-    this.delay = delay;
     this.track = track;
   }
 
@@ -26,12 +25,12 @@ public class TrainDeparture {
   }
 
   public void addDelay(final int hours, final int minutes) {
-      this.delay = this.delay.plusHours(hours);
-      this.delay = this.delay.plusMinutes(minutes);
+    this.delay = this.delay.plusHours(hours);
+    this.delay = this.delay.plusMinutes(minutes);
   }
 
   public void setTrack(String track) {
-      this.track = track;
+    this.track = track;
   }
 
   public String getTrainNumber() {
