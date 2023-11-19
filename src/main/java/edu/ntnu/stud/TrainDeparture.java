@@ -26,7 +26,18 @@ public class TrainDeparture {
 
   @Override
   public String toString() {
-    return departureTime + " " + line + " " + trainNumber + " " + destination + " " + delay + " " + track;
+    var sb = new StringBuilder();
+    sb.append("Departure time: ").append(departureTime.toString()).append("\n");
+    sb.append("Line: ").append(line).append("\n");
+    sb.append("Train number: ").append(trainNumber).append("\n");
+    sb.append("Destination: ").append(destination).append("\n");
+    if (delay != null) {
+      sb.append("Delay: ").append(delay.toString()).append("\n");
+    }
+    if (track != -1) {
+      sb.append("Track: ").append(track).append("\n");
+    }
+    return sb.toString();
   }
 
   public void addDelay(int hours, int minutes) {
