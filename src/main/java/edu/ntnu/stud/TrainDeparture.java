@@ -3,15 +3,15 @@ package edu.ntnu.stud;
 import java.time.LocalTime;
 
 public class TrainDeparture {
-  private final String trainNumber;
+  private final int trainNumber;
   private final String line;
   private final String destination;
   private final LocalTime departureTime;
   private LocalTime delay;
-  private String track;
+  private int track;
 
-  public TrainDeparture(final String trainNumber, final String line, final String destination,
-                        final LocalTime departureTime, final String track) {
+  public TrainDeparture(int trainNumber, String line, String destination,
+                        LocalTime departureTime, int track) {
     this.trainNumber = trainNumber;
     this.line = line;
     this.destination = destination;
@@ -19,21 +19,32 @@ public class TrainDeparture {
     this.track = track;
   }
 
+  public TrainDeparture(int trainNumber, String line, String destination,
+                        LocalTime departureTime) {
+    this(trainNumber, line, destination, departureTime, -1);
+  }
+
   @Override
   public String toString() {
     return departureTime + " " + line + " " + trainNumber + " " + destination + " " + delay + " " + track;
   }
 
-  public void addDelay(final int hours, final int minutes) {
+  public void addDelay(int hours, int minutes) {
+    if (hours <= 0 || minutes <= 0) {
+      throw new IllegalArgumentException("Delay cannot be 0 or negative");
+    }
     this.delay = this.delay.plusHours(hours);
     this.delay = this.delay.plusMinutes(minutes);
   }
 
-  public void setTrack(String track) {
+  public void setTrack(int track) {
+    if (track <= 0) {
+      throw new IllegalArgumentException("Track cannot be 0 or negative");
+    }
     this.track = track;
   }
 
-  public String getTrainNumber() {
+  public int getTrainNumber() {
     return trainNumber;
   }
 
@@ -53,7 +64,7 @@ public class TrainDeparture {
     return delay;
   }
 
-  public String getTrack() {
+  public int getTrack() {
     return track;
   }
 }
