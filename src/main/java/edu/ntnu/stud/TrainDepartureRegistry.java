@@ -20,4 +20,24 @@ public class TrainDepartureRegistry {
     }
     trainDepartures.put(trainNumber, trainDeparture);
   }
+
+  public TrainDepartureRegistry getTrainDepartureByDestination(String destination) {
+    var result = new TrainDepartureRegistry();
+    trainDepartures.values().stream()
+        .filter(trainDeparture -> trainDeparture.getDestination().equals(destination))
+        .forEach(trainDeparture -> result.addTrainDeparture(
+            trainDeparture.getTrainNumber(),
+            trainDeparture.getLine(),
+            trainDeparture.getDestination(),
+            trainDeparture.getDepartureTime(),
+            trainDeparture.getTrack()));
+    return result;
+  }
+
+  @Override
+  public String toString() {
+    return trainDepartures.values().stream()
+        .map(TrainDeparture::toString)
+        .collect(Collectors.joining("\n"));
+  }
 }
