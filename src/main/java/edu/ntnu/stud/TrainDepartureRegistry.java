@@ -2,6 +2,7 @@ package edu.ntnu.stud;
 
 import java.time.LocalTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class TrainDepartureRegistry {
@@ -32,6 +33,18 @@ public class TrainDepartureRegistry {
             trainDeparture.getDepartureTime(),
             trainDeparture.getTrack()));
     return result;
+  }
+
+  public void deleteTrainDeparture(int trainNumber) {
+    trainDepartures.remove(trainNumber);
+  }
+
+  public void deleteTrainDeparturesBeforeTime(LocalTime time) {
+    List<Integer> trainsToRemove = trainDepartures.values().stream()
+        .filter(trainDeparture -> trainDeparture.departureTimeWithDelay().isBefore(time))
+        .map(TrainDeparture::getTrainNumber)
+        .toList();
+    trainsToRemove.forEach(this::deleteTrainDeparture);
   }
 
   @Override
