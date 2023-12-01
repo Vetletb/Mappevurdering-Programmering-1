@@ -23,32 +23,24 @@ public class TrainDeparture {
    * @param track         the track
    */
   public TrainDeparture(int trainNumber, String line, String destination,
-                        LocalTime departureTime, int track) {
-    validateTrainNumber(trainNumber);
-    validateLine(line);
-    validateDestination(destination);
-    validateDepartureTime(departureTime);
+                        LocalTime departureTime, LocalTime delay, int track) {
+    validatePositiveNumber(trainNumber, "Train number");
+    validateStringNotBlank(line, "Line");
+    validateStringNotBlank(destination, "Destination");
+    validateNotNull(departureTime, "Departure time");
+
+    setTrack(track);
+    setDelay(delay);
 
     this.trainNumber = trainNumber;
     this.line = line;
     this.destination = destination;
     this.departureTime = departureTime;
-
-    setTrack(track);
-    setDelay(LocalTime.of(0, 0));
   }
 
-  /**
-   * Creates a new train departure.
-   *
-   * @param trainNumber   the train number
-   * @param line          the line
-   * @param destination   the destination
-   * @param departureTime the departure time
-   */
   public TrainDeparture(int trainNumber, String line, String destination,
                         LocalTime departureTime) {
-    this(trainNumber, line, destination, departureTime, -1);
+    this(trainNumber, line, destination, departureTime, LocalTime.of(0, 0), -1);
   }
 
   /**
@@ -146,64 +138,34 @@ public class TrainDeparture {
     return sb.toString();
   }
 
-  /**
-   * Validates the train number.
-   *
-   * @param trainNumber the train number
-   */
-  private void validateTrainNumber(int trainNumber) {
-    if (trainNumber <= 0) {
-      throw new IllegalArgumentException("Train number cannot be negative");
-    }
-  }
-
-  /**
-   * Validates the line.
-   *
-   * @param line the line
-   */
-  private void validateLine(String line) {
-    if (line.isBlank()) {
-      throw new IllegalArgumentException("Line cannot be blank");
-    }
-  }
-
-  /**
-   * Validates the destination.
-   *
-   * @param destination the destination
-   */
-  private void validateDestination(String destination) {
-    if (destination.isBlank()) {
-      throw new IllegalArgumentException("Destination cannot be blank");
-    }
-  }
-
-  /**
-   * Validates the departure time.
-   *
-   * @param departureTime the departure time
-   */
-  private void validateDepartureTime(LocalTime departureTime) {
-    if (departureTime == null) {
-      throw new IllegalArgumentException("Departure time cannot be null");
-    }
-  }
-
   private void validateTrack(int track) {
-    if (track < -1) {
-      throw new IllegalArgumentException("Track cannot be negative");
+    if (track <= 0 && track != -1) {
+      throw new IllegalArgumentException("Track cannot be zero or less, unless -1");
     }
   }
 
-  /**
-   * Validates the delay.
-   *
-   * @param delay the delay
-   */
   private void validateDelay(LocalTime delay) {
-    if (delay == null) {
-      throw new IllegalArgumentException("Delay cannot be null");
+    validateNotNull(delay, "Delay");
+    if (delay.equals(LocalTime.of(0, 0))) {
+      throw new IllegalArgumentException("Delay cannot be zero");
+    }
+  }
+
+  private void validateStringNotBlank(String string, String name) {
+    if (string.isBlank()) {
+      throw new IllegalArgumentException(name + " cannot be blank");
+    }
+  }
+
+  private void validatePositiveNumber(int number, String name) {
+    if (number < 0) {
+      throw new IllegalArgumentException(name + " cannot be negative");
+    }
+  }
+
+  private void validateNotNull(Object object, String name) {
+    if (object == null) {
+      throw new IllegalArgumentException(name + " cannot be null");
     }
   }
 
@@ -220,5 +182,9 @@ public class TrainDeparture {
       throw new IllegalArgumentException("Delay cannot be zero");
     }
     setDelay(this.delay.plusHours(delay.getHour()).plusMinutes(delay.getMinute()));
+  }
+
+  public LocalTime departureTimeWithDelay() {
+    return departureTime.plusHours(delay.getHour()).plusMinutes(delay.getMinute());
   }
 }
