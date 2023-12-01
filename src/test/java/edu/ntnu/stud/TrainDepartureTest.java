@@ -19,60 +19,85 @@ public class TrainDepartureTest {
     public class ConstructorThrowsExceptions {
 
       @Test
-      @DisplayName("Throws IllegalArgumentException on invalid train number")
+      @DisplayName("Constructor throws IllegalArgumentException on train number zero or less")
       void TrainDepartureConstructorThrowsExceptionOnTrainNumberZeroOrLess() {
         assertThrows(IllegalArgumentException.class, () -> {
-          new TrainDeparture(-1, "line", "destination", LocalTime.of(0, 0));
+          new TrainDeparture(-1, "line", "destination",
+              LocalTime.of(0, 0));
         });
       }
 
       @Test
-      @DisplayName("Throws IllegalArgumentException on invalid line")
+      @DisplayName("Constructor throws IllegalArgumentException on line is blank")
       void TrainDepartureConstructorThrowsExceptionOnBlankLine() {
         assertThrows(IllegalArgumentException.class, () -> {
-          new TrainDeparture(1, "", "destination", LocalTime.of(0, 0));
+          new TrainDeparture(1, "", "destination",
+              LocalTime.of(0, 0));
         });
       }
 
       @Test
-      @DisplayName("Throws IllegalArgumentException on invalid destination")
+      @DisplayName("Constructor throws IllegalArgumentException on destination is blank")
       void TrainDepartureConstructorThrowsExceptionOnBlankDestination() {
         assertThrows(IllegalArgumentException.class, () -> {
-          new TrainDeparture(1, "line", " ", LocalTime.of(0, 0));
+          new TrainDeparture(1, "line", " ",
+              LocalTime.of(0, 0));
         });
       }
 
       @Test
-      @DisplayName("Throws IllegalArgumentException on invalid departure time")
+      @DisplayName("Constructor throws IllegalArgumentException on departure time is null")
       void TrainDepartureConstructorThrowsExceptionOnDepartureTimeNull() {
         assertThrows(IllegalArgumentException.class, () -> {
-          new TrainDeparture(1, "line", "destination", null);
+          new TrainDeparture(1, "line", "destination",
+              null);
         });
       }
 
       @Test
-      @DisplayName("Throws IllegalArgumentException on invalid track")
-      void TrainDepartureConstructorThrowsExceptionOnTrackNegativeOneOrLess() {
+      @DisplayName("Constructor throws IllegalArgumentException on track under -1")
+      void TrainDepartureConstructorThrowsExceptionOnTrackUnderNegativeOne() {
         assertThrows(IllegalArgumentException.class, () -> {
-          new TrainDeparture(1, "line", "destination", LocalTime.of(0, 0), -2);
+          new TrainDeparture(1, "line", "destination",
+              LocalTime.of(0, 0), LocalTime.of(0, 0), -2);
+        });
+      }
+
+      @Test
+      @DisplayName("Constructor throws IllegalArgumentException on track zero")
+      void TrainDepartureConstructorThrowsExceptionOnTrackZero() {
+        assertThrows(IllegalArgumentException.class, () -> {
+          new TrainDeparture(1, "line", "destination",
+              LocalTime.of(0, 0), LocalTime.of(0, 0), 0);
+        });
+      }
+
+      @Test
+      @DisplayName("Constructor throws IllegalArgumentException on delay is null")
+      void TrainDepartureConstructorThrowsExceptionOnDelayNull() {
+        assertThrows(IllegalArgumentException.class, () -> {
+          var trainDeparture = new TrainDeparture(1, "line", "destination",
+              LocalTime.of(0, 0), null, 1);
         });
       }
     }
 
     @Test
-    @DisplayName("Throws IllegalArgumentException on invalid delay")
+    @DisplayName("addDelay throws IllegalArgumentException on added delay is null")
     void TrainDepartureAddDelayThrowsExceptionOnDelayNull() {
       assertThrows(IllegalArgumentException.class, () -> {
-        var trainDeparture = new TrainDeparture(1, "line", "destination", LocalTime.of(0, 0));
+        var trainDeparture = new TrainDeparture(1, "line", "destination",
+            LocalTime.of(0, 0));
         trainDeparture.addDelay(null);
       });
     }
 
     @Test
-    @DisplayName("Throws IllegalArgumentException on invalid delay")
+    @DisplayName("addDelay throws IllegalArgumentException on added delay is zero")
     void TrainDepartureAddDelayThrowsExceptionOnDelayZero() {
       assertThrows(IllegalArgumentException.class, () -> {
-        var trainDeparture = new TrainDeparture(1, "line", "destination", LocalTime.of(0, 0));
+        var trainDeparture = new TrainDeparture(1, "line", "destination",
+            LocalTime.of(0, 0));
         trainDeparture.addDelay(LocalTime.of(0, 0));
       });
     }
@@ -86,24 +111,55 @@ public class TrainDepartureTest {
     @DisplayName("Constructor does not throw IllegalArgumentException on valid parameters")
     void TrainDepartureConstructorDoesNotThrowExceptionOnValidParameters() {
       assertDoesNotThrow(() -> {
-        new TrainDeparture(1, "line", "destination", LocalTime.of(0, 0));
+        new TrainDeparture(1, "line", "destination",
+            LocalTime.of(0, 0), LocalTime.of(0, 0), 1);
       });
     }
-  }
 
-  @Test
-  @DisplayName("addDelay does not throw IllegalArgumentException on valid parameters")
-  void TrainDepartureAddDelayDoesNotThrowExceptionOnValidParameters() {
-    assertDoesNotThrow(() -> {
-      var trainDeparture = new TrainDeparture(1, "line", "destination", LocalTime.of(0, 0));
-      trainDeparture.addDelay(LocalTime.of(0, 1));
-    });
-  }
+    @Test
+    @DisplayName("Constructor does not throw IllegalArgumentException on track -1")
+    void TrainDepartureConstructorDoesNotThrowExceptionOnTrackNegativeOne() {
+      assertDoesNotThrow(() -> {
+        new TrainDeparture(1, "line", "destination",
+            LocalTime.of(0, 0), LocalTime.of(0, 0), -1);
+      });
+    }
 
-  @Test
-  @DisplayName("toString returns correct string")
-  void TrainDepartureToStringReturnsCorrectString() {
-    var trainDeparture = new TrainDeparture(1, "line", "destination", LocalTime.of(0, 0));
-    assertEquals("Departure time: 00:00\nLine: line\nTrain number: 1\nDestination: destination\n", trainDeparture.toString());
+    @Test
+    @DisplayName("addDelay does not throw IllegalArgumentException on valid parameters")
+    void TrainDepartureAddDelayDoesNotThrowExceptionOnValidParameters() {
+      assertDoesNotThrow(() -> {
+        var trainDeparture = new TrainDeparture(1, "line", "destination",
+            LocalTime.of(0, 0));
+        trainDeparture.addDelay(LocalTime.of(1, 1));
+      });
+    }
+
+    @Test
+    @DisplayName("departureTimeWithDelay returns correct time")
+    void TrainDepartureDepartureTimeWithDelayReturnsCorrectTime() {
+      var trainDeparture = new TrainDeparture(1, "line", "destination",
+          LocalTime.of(0, 0));
+      trainDeparture.addDelay(LocalTime.of(1, 1));
+      assertEquals(LocalTime.of(1, 1), trainDeparture.departureTimeWithDelay());
+    }
+
+    @Test
+    @DisplayName("toString returns correct string with track and delay")
+    void TrainDepartureToStringReturnsCorrectStringWithAllFieldsSet() {
+      var trainDeparture = new TrainDeparture(1, "line", "destination",
+          LocalTime.of(0, 0), LocalTime.of(1, 1), 1);
+      assertEquals("Departure time: 00:00\nLine: line\nTrain number: 1\nDestination:"
+          + " destination\nDelay: 01:01\nTrack: 1\n", trainDeparture.toString());
+    }
+
+    @Test
+    @DisplayName("toString returns correct string without track and delay")
+    void TrainDepartureToStringReturnsCorrectStringWithoutOptionalFields() {
+      var trainDeparture = new TrainDeparture(1, "line", "destination",
+          LocalTime.of(0, 0));
+      assertEquals("Departure time: 00:00\nLine: line\nTrain number: 1\nDestination:"
+          + " destination\n", trainDeparture.toString());
+    }
   }
 }
