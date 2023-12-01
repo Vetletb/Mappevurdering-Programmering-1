@@ -14,8 +14,8 @@ public class TrainDepartureRegistry {
   }
 
   public void addTrainDeparture(int trainNumber, String line, String destination,
-                                LocalTime departureTime, int track) {
-    var trainDeparture = new TrainDeparture(trainNumber, line, destination, departureTime, track);;
+                                LocalTime departureTime) {
+    var trainDeparture = new TrainDeparture(trainNumber, line, destination, departureTime);;
     if (trainDepartures.containsKey(trainNumber)) {
       throw new IllegalArgumentException("Train number already exists");
     }
@@ -30,8 +30,7 @@ public class TrainDepartureRegistry {
             trainDeparture.getTrainNumber(),
             trainDeparture.getLine(),
             trainDeparture.getDestination(),
-            trainDeparture.getDepartureTime(),
-            trainDeparture.getTrack()));
+            trainDeparture.getDepartureTime()));
     return result;
   }
 

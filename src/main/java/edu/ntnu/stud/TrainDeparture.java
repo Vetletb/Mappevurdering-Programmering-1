@@ -103,7 +103,7 @@ public class TrainDeparture {
    * @param delay the delay
    */
   private void setDelay(LocalTime delay) {
-    validateDelay(delay);
+    validateNotNull(delay, "Delay");
     this.delay = delay;
   }
 
@@ -144,13 +144,6 @@ public class TrainDeparture {
     }
   }
 
-  private void validateDelay(LocalTime delay) {
-    validateNotNull(delay, "Delay");
-    if (delay.equals(LocalTime.of(0, 0))) {
-      throw new IllegalArgumentException("Delay cannot be zero");
-    }
-  }
-
   private void validateStringNotBlank(String string, String name) {
     if (string.isBlank()) {
       throw new IllegalArgumentException(name + " cannot be blank");
@@ -175,11 +168,9 @@ public class TrainDeparture {
    * @param delay the delay
    */
   public void addDelay(LocalTime delay) {
-    if (delay == null) {
-      throw new IllegalArgumentException("Delay cannot be null");
-    }
+    validateNotNull(delay, "Delay");
     if (delay.equals(LocalTime.of(0, 0))) {
-      throw new IllegalArgumentException("Delay cannot be zero");
+      throw new IllegalArgumentException("Added delay cannot be zero");
     }
     setDelay(this.delay.plusHours(delay.getHour()).plusMinutes(delay.getMinute()));
   }
