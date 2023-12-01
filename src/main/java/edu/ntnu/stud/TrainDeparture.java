@@ -38,6 +38,14 @@ public class TrainDeparture {
     this.departureTime = departureTime;
   }
 
+  /**
+   * Creates a new train departure.
+   *
+   * @param trainNumber   the train number
+   * @param line          the line
+   * @param destination   the destination
+   * @param departureTime the departure time
+   */
   public TrainDeparture(int trainNumber, String line, String destination,
                         LocalTime departureTime) {
     this(trainNumber, line, destination, departureTime, LocalTime.of(0, 0), -1);
@@ -138,24 +146,47 @@ public class TrainDeparture {
     return sb.toString();
   }
 
+  /**
+   * Validates the track.
+   *
+   * @param track the track
+   */
   private void validateTrack(int track) {
     if (track <= 0 && track != -1) {
       throw new IllegalArgumentException("Track cannot be zero or less, unless -1");
     }
   }
 
+  /**
+   * Validates the string is not blank.
+   *
+   * @param string the string
+   * @param name   the name
+   */
   private void validateStringNotBlank(String string, String name) {
     if (string.isBlank()) {
       throw new IllegalArgumentException(name + " cannot be blank");
     }
   }
 
+  /**
+   * Validates the number is positive.
+   *
+   * @param number the number
+   * @param name   the name
+   */
   private void validatePositiveNumber(int number, String name) {
     if (number < 0) {
       throw new IllegalArgumentException(name + " cannot be negative");
     }
   }
 
+  /**
+   * Validates the object is not null.
+   *
+   * @param object the object
+   * @param name   the name
+   */
   private void validateNotNull(Object object, String name) {
     if (object == null) {
       throw new IllegalArgumentException(name + " cannot be null");
@@ -175,6 +206,11 @@ public class TrainDeparture {
     setDelay(this.delay.plusHours(delay.getHour()).plusMinutes(delay.getMinute()));
   }
 
+  /**
+   * Gets the departure time with delay.
+   *
+   * @return the departure time with delay
+   */
   public LocalTime departureTimeWithDelay() {
     return departureTime.plusHours(delay.getHour()).plusMinutes(delay.getMinute());
   }
