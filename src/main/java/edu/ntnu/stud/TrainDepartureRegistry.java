@@ -20,11 +20,12 @@ public class TrainDepartureRegistry {
    * @param trainNumber the train departures
    */
   public TrainDeparture getTrainDeparture(int trainNumber) {
+    validateTrainNumberExistence(trainNumber);
     return trainDepartures.get(trainNumber);
   }
 
   /**
-   * Adds a train departure.
+   * Creates and adds a new train departure.
    *
    * @param trainNumber   the train number
    * @param line          the line
@@ -33,17 +34,17 @@ public class TrainDepartureRegistry {
    */
   public void newTrainDeparture(int trainNumber, String line, String destination,
                                 LocalTime departureTime) {
-    var trainDeparture = new TrainDeparture(trainNumber, line, destination, departureTime);;
+    var trainDeparture = new TrainDeparture(trainNumber, line, destination, departureTime);
     addTrainDeparture(trainDeparture);
   }
 
   /**
-   * Adds a train departure.
+   * Adds a train departure to registry.
    *
    * @param trainDeparture the train departure
    */
   private void addTrainDeparture(TrainDeparture trainDeparture) {
-    if (trainDepartures.containsKey(trainDeparture.getTrainNumber())) {
+    if (containsTrainDeparture(trainDeparture)) {
       throw new IllegalArgumentException("Train number already exists");
     }
     trainDepartures.put(trainDeparture.getTrainNumber(), trainDeparture);
@@ -54,20 +55,64 @@ public class TrainDepartureRegistry {
    *
    * @param destination the destination
    */
-  public TrainDepartureRegistry getTrainDepartureByDestination(String destination) {
+  public TrainDepartureRegistry getTrainDeparturesByDestination(String destination) {
+    validateStringNotBlank(destination, "Destination");
     var result = new TrainDepartureRegistry();
     trainDepartures.values().stream()
         .filter(trainDeparture -> trainDeparture.getDestination().equals(destination))
-        .forEach(trainDeparture -> result.addTrainDeparture(trainDeparture));
+        .forEach(result::addTrainDeparture);
     return result;
   }
+
+  /**
+   * Checks if registry contains train departure.
+   *
+   * @param trainDeparture the train departure
+   */
+  public boolean containsTrainDeparture(TrainDeparture trainDeparture) {
+    return containsTrainNumber(trainDeparture.getTrainNumber());
+  }
+
+  /**
+   * Checks if registry contains train number.
+   *
+   * @param trainNumber the train number
+   */
+  public boolean containsTrainNumber(int trainNumber) {
+    return trainDepartures.containsKey(trainNumber);
+  }
+
+  /**
+   * Validates train number presence.
+   *
+   * @param trainNumber the train number
+   */
+  public void validateTrainNumberExistence(int trainNumber) {
+    if (!containsTrainNumber(trainNumber)) {
+      throw new IllegalArgumentException("Train departure is not in the registry");
+    }
+  }
+
+  /**
+   * Validates train departure presence.
+   *
+   * @param trainDeparture the train departure
+   */
+  public void validateTrainDepartureExistence(TrainDeparture trainDeparture) {
+    if (!containsTrainDeparture(trainDeparture)) {
+      throw new IllegalArgumentException("Train departure is not in the registry");
+    }
+  }
+
+
 
   /**
    * Deletes a train departure.
    *
    * @param trainNumber the train number
    */
-  public void deleteTrainDeparture(int trainNumber) {
+  public void removeTrainDeparture(int trainNumber) {
+    validateTrainNumberExistence(trainNumber);
     trainDepartures.remove(trainNumber);
   }
 
@@ -76,12 +121,13 @@ public class TrainDepartureRegistry {
    *
    * @param time the time
    */
-  public void deleteTrainDeparturesBeforeTime(LocalTime time) {
+  public void removeTrainDeparturesBeforeTime(LocalTime time) {
+    validateNotNull(time, "Time");
     List<Integer> trainsToRemove = trainDepartures.values().stream()
         .filter(trainDeparture -> trainDeparture.departureTimeWithDelay().isBefore(time))
         .map(TrainDeparture::getTrainNumber)
         .toList();
-    trainsToRemove.forEach(this::deleteTrainDeparture);
+    trainsToRemove.forEach(this::removeTrainDeparture);
   }
 
   /**
@@ -107,4 +153,17 @@ public class TrainDepartureRegistry {
         .map(TrainDeparture::toString)
         .collect(Collectors.joining("\n"));
   }
+
+  public void validateNotNull(Object object, String name) {
+    if (object == null) {
+      throw new IllegalArgumentException(name + " cannot be null");
+    }
+  }
+
+  public void validateStringNotBlank(String string, String name) {
+    if (string.isBlank()) {
+      throw new IllegalArgumentException(name + " cannot be blank");
+    }
+  }
 }
+
