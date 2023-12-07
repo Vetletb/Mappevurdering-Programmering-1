@@ -3,7 +3,8 @@ package edu.ntnu.stud;
 import java.time.LocalTime;
 
 public class UserInterface {
-  private TrainDepartureRegistry trainDepartureRegistry = new TrainDepartureRegistry();
+  private final TrainDepartureRegistry trainDepartureRegistry = new TrainDepartureRegistry();
+  private LocalTime currentTime = LocalTime.of(0, 0);
 
   public void init() {
     trainDepartureRegistry.newTrainDeparture(10, "A4", "Trondheim", LocalTime.of(6, 15));
@@ -18,5 +19,35 @@ public class UserInterface {
 
   }
 
-  
+  private void addDeparture(int trainNumber, String line, String destination, LocalTime departureTime) {
+    trainDepartureRegistry.newTrainDeparture(trainNumber, line, destination, departureTime);
+  }
+
+  private void addDelay(int trainNumber, LocalTime delay) {
+    trainDepartureRegistry.addDelay(trainNumber, delay);
+  }
+
+  private void setTrack(int trainNumber, int track) {
+    trainDepartureRegistry.setTrack(trainNumber, track);
+  }
+
+  private void searchByTrainNumber(int trainNumber) {
+    String departure = trainDepartureRegistry.getTrainDepartureString(trainNumber);
+    System.out.println(departure);
+  }
+
+  private void searchByDestination(String destination) {
+    TrainDepartureRegistry trainDepartures = trainDepartureRegistry
+        .getTrainDeparturesByDestination(destination);
+    System.out.println(trainDepartures);
+  }
+
+  private void updateDeparted() {
+    trainDepartureRegistry.removeTrainDeparturesBeforeTime(currentTime);
+  }
+
+  private void printInformationBoard() {
+    System.out.println(trainDepartureRegistry);
+  }
 }
+

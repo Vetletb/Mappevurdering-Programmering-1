@@ -24,6 +24,10 @@ public class TrainDepartureRegistry {
     return trainDepartures.get(trainNumber);
   }
 
+  public String getTrainDepartureString(int trainNumber) {
+    return trainDepartures.get(trainNumber).toString();
+  }
+
   /**
    * Creates and adds a new train departure.
    *
@@ -48,6 +52,16 @@ public class TrainDepartureRegistry {
       throw new IllegalArgumentException("Train number already exists");
     }
     trainDepartures.put(trainDeparture.getTrainNumber(), trainDeparture);
+  }
+
+  public void addDelay(int trainNumber, LocalTime delay) {
+    validateTrainNumberExistence(trainNumber);
+    trainDepartures.get(trainNumber).addDelay(delay);
+  }
+
+  public void setTrack(int trainNumber, int track) {
+    validateTrainNumberExistence(trainNumber);
+    trainDepartures.get(trainNumber).setTrack(track);
   }
 
   /**
