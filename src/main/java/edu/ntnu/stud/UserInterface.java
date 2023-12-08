@@ -92,7 +92,7 @@ public class UserInterface {
     }
   }
 
-  private void addDelay(int trainNumber, LocalTime delay) {
+  private void addDelay(int trainNumber, int delay) {
     try {
     trainDepartureRegistry.addDelay(trainNumber, delay);
     } catch (IllegalArgumentException e) {
@@ -337,8 +337,8 @@ public class UserInterface {
       waitForUser();
     } else if (command.length == 5) {
       int trainNumber = Integer.parseInt(command[3]);
-      String timeString = command[4];
-      LocalTime delay = timeFromString(timeString);
+      String delayString = command[4];
+      int delay = Integer.parseInt(delayString);
       addDelay(trainNumber, delay);
     } else {
       System.out.println("\nUnknown command: " + command);
@@ -382,7 +382,7 @@ public class UserInterface {
 
   private void promptAddDelay() {
     int trainNumber = promptTrainNumber();
-    LocalTime delay = promptTime();
+    int delay = promptDelay();
     addDelay(trainNumber, delay);
     System.out.println("\nUpdated train info:");
     searchByTrainNumber(trainNumber);
@@ -427,6 +427,10 @@ public class UserInterface {
 
   private int promptTrack() {
     return UserInput.promptInt("\nEnter track:");
+  }
+
+  private int promptDelay() {
+    return UserInput.promptInt("\nEnter delay:");
   }
 }
 

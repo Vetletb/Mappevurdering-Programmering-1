@@ -1,6 +1,7 @@
 package edu.ntnu.stud;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +26,7 @@ public class TrainDepartureRegistry {
   }
 
   public String getTrainDepartureString(int trainNumber) {
+    validateTrainNumberExistence(trainNumber);
     return trainDepartures.get(trainNumber).toString();
   }
 
@@ -54,7 +56,7 @@ public class TrainDepartureRegistry {
     trainDepartures.put(trainDeparture.getTrainNumber(), trainDeparture);
   }
 
-  public void addDelay(int trainNumber, LocalTime delay) {
+  public void addDelay(int trainNumber, int delay) {
     validateTrainNumberExistence(trainNumber);
     trainDepartures.get(trainNumber).addDelay(delay);
   }
@@ -149,11 +151,16 @@ public class TrainDepartureRegistry {
    *
    * @return a list of train numbers sorted by departure time
    */
-  public List<Integer> sortedByDepartureTime() {
+  public ArrayList<Integer> sortedByDepartureTime() {
     return trainDepartures.entrySet().stream()
         .sorted(Comparator.comparing(entry -> entry.getValue().getDepartureTime()))
         .map(Map.Entry::getKey)
-        .toList();
+        .collect(Collectors.toCollection(ArrayList::new));
+  }
+
+  public HashMap<String, String> getAllFromTrainNumber(int trainNumber) {
+    validateTrainNumberExistence(trainNumber);
+    return trainDepartures.get(trainNumber).getAll();
   }
 
   /**

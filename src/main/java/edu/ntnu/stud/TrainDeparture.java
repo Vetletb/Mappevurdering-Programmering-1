@@ -1,6 +1,8 @@
 package edu.ntnu.stud;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * This class represents a train departure.
@@ -10,7 +12,7 @@ public class TrainDeparture {
   private final String line;
   private final String destination;
   private final LocalTime departureTime;
-  private LocalTime delay;
+  private int delay;
   private int track;
 
   /**
@@ -23,7 +25,7 @@ public class TrainDeparture {
    * @param track         the track
    */
   public TrainDeparture(int trainNumber, String line, String destination,
-                        LocalTime departureTime, LocalTime delay, int track) {
+                        LocalTime departureTime, int delay, int track) {
     Validation.validatePositiveNumber(trainNumber, "Train number");
     Validation.validateStringNotBlank(line, "Line");
     Validation.validateStringNotBlank(destination, "Destination");
@@ -48,7 +50,7 @@ public class TrainDeparture {
    */
   public TrainDeparture(int trainNumber, String line, String destination,
                         LocalTime departureTime) {
-    this(trainNumber, line, destination, departureTime, LocalTime.of(0, 0), -1);
+    this(trainNumber, line, destination, departureTime, 0, -1);
   }
 
   /**
@@ -92,7 +94,7 @@ public class TrainDeparture {
    *
    * @return the delay
    */
-  public LocalTime getDelay() {
+  public int getDelay() {
     return delay;
   }
 
@@ -105,13 +107,32 @@ public class TrainDeparture {
     return track;
   }
 
+  public HashMap<String, String> getAll() {
+    HashMap<String, String> allInfo = new HashMap<>();
+    allInfo.put("departureTime", departureTime.toString());
+    allInfo.put("line", line);
+    allInfo.put("trainNumber", String.valueOf(trainNumber));
+    allInfo.put("destination", destination);
+    if (delay > 0) {
+      allInfo.put("delay", delay + " min");
+    } else {
+      allInfo.put("delay", "");
+    }
+    if (track != -1) {
+      allInfo.put("track", String.valueOf(track));
+    } else {
+      allInfo.put("track", "");
+    }
+    return allInfo;
+  }
+
   /**
    * Sets the delay.
    *
    * @param delay the delay
    */
-  private void setDelay(LocalTime delay) {
-    Validation.validateNotNull(delay, "Delay");
+  private void setDelay(int delay) {
+    Validation.validatePositiveNumber(delay, "Delay");
     this.delay = delay;
   }
 
@@ -137,12 +158,8 @@ public class TrainDeparture {
     sb.append("Line: ").append(line).append("\n");
     sb.append("Train number: ").append(trainNumber).append("\n");
     sb.append("Destination: ").append(destination).append("\n");
-    if (delay != null && delay != LocalTime.of(0, 0)) {
-      sb.append("Delay: ").append(delay).append("\n");
-    }
-    if (track != -1) {
-      sb.append("Track: ").append(track).append("\n");
-    }
+    sb.append("Delay: ").append(delay).append("\n");
+    sb.append("Track: ").append(track).append("\n");
     return sb.toString();
   }
 
@@ -151,12 +168,9 @@ public class TrainDeparture {
    *
    * @param delay the delay
    */
-  public void addDelay(LocalTime delay) {
-    Validation.validateNotNull(delay, "Delay");
-    if (delay.equals(LocalTime.of(0, 0))) {
-      throw new IllegalArgumentException("Added delay cannot be zero");
-    }
-    setDelay(this.delay.plusHours(delay.getHour()).plusMinutes(delay.getMinute()));
+  public void addDelay(int delay) {
+    Validation.validatePositiveNumber(delay, "Delay");
+    setDelay(this.delay + delay);
   }
 
   /**
@@ -165,6 +179,6 @@ public class TrainDeparture {
    * @return the departure time with delay
    */
   public LocalTime departureTimeWithDelay() {
-    return departureTime.plusHours(delay.getHour()).plusMinutes(delay.getMinute());
+    return departureTime.plusMinutes(delay);
   }
 }
