@@ -17,7 +17,6 @@ public class Menu {
   }
 
   public void displayMenu() {
-    System.out.println("\n");
     System.out.println("-".repeat(40));
     System.out.println(prompt);
     System.out.println("-".repeat(40));
