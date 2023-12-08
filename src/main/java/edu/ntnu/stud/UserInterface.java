@@ -78,5 +78,85 @@ public class UserInterface {
   private void printInformationBoard() {
     System.out.println(trainDepartureRegistry);
   }
+
+  private void setCurrentTime(LocalTime time) {
+    validateTimeNotBefore(currentTime, time);
+    updateDeparted();
+    currentTime = time;
+  }
+
+  public LocalTime timeFromString(String timeString) {
+    String[] timeArray = timeString.split(":");
+    int hours = Integer.parseInt(timeArray[0]);
+    int minutes = Integer.parseInt(timeArray[1]);
+    return LocalTime.of(hours, minutes);
+  }
+
+  public void validateTimeNotBefore(LocalTime currentTime, LocalTime newTime) {
+    if (newTime.isBefore(currentTime)) {
+      throw new IllegalArgumentException("Time cannot be before current time.");
+    }
+  }
+
+  private void promptAddDeparture() {
+    int trainNumber = promptTrainNumber();
+    String line = promptLine();
+    String destination = promptDestination();
+    LocalTime departureTime = promptTime();
+    addDeparture(trainNumber, line, destination, departureTime);
+  }
+
+  private void promptAddDelay() {
+    int trainNumber = promptTrainNumber();
+    LocalTime delay = promptTime();
+    addDelay(trainNumber, delay);
+    System.out.println("Updated train info:");
+    searchByTrainNumber(trainNumber);
+  }
+
+  private void promptSetTrack() {
+    int trainNumber = promptTrainNumber();
+    int track = promptTrack();
+    setTrack(trainNumber, track);
+    System.out.println("Updated train info:");
+    searchByTrainNumber(trainNumber);
+  }
+
+  private void promptSearchByTrainNumber() {
+    int trainNumber = promptTrainNumber();
+    searchByTrainNumber(trainNumber);
+  }
+
+  private void promptSearchByDestination() {
+    String destination = promptDestination();
+    searchByDestination(destination);
+  }
+
+  private void promptSetCurrentTime() {
+    LocalTime time = promptTime();
+    setCurrentTime(time);
+    System.out.println("Time set to " + time);
+  }
+
+  private int promptTrainNumber() {
+    return UserInput.promptInt("Enter train number:");
+  }
+
+  private String promptDestination() {
+    return UserInput.promptString("Enter destination:");
+  }
+
+  private LocalTime promptTime() {
+    String timeString = UserInput.promptString("Enter time:");
+    return timeFromString(timeString);
+  }
+
+  private String promptLine() {
+    return UserInput.promptString("Enter line:");
+  }
+
+  private int promptTrack() {
+    return UserInput.promptInt("Enter track:");
+  }
 }
 
