@@ -93,8 +93,27 @@ public class UserInterface {
   }
 
   private void printInformationBoard() {
-    System.out.println("\nInformation board       Current time " + currentTime);
-    System.out.println(trainDepartureRegistry);
+    System.out.printf("%-56s%s\n", "Information board", "Current time " + currentTime);
+    System.out.println("-".repeat(75));
+    System.out.printf("%-12s%-11s%-18s%-16s%-12s%-11s\n",
+        "Train",
+        "Line",
+        "Destination",
+        "Departure",
+        "Track",
+        "Delay");
+    System.out.println("-".repeat(75));
+    for (int trainNumber : sortedTrainDepartures()) {
+      HashMap<String, String> trainDepartureInfo = trainDepartureInfo(trainNumber);
+      System.out.printf("%-12s%-11s%-18s%-16s%-12s%-11s\n",
+          trainDepartureInfo.get("trainNumber"),
+          trainDepartureInfo.get("line"),
+          trainDepartureInfo.get("destination"),
+          trainDepartureInfo.get("departureTime"),
+          trainDepartureInfo.get("track"),
+          trainDepartureInfo.get("delay"));
+    }
+    System.out.println("-".repeat(75));
   }
 
   private void updateDeparted() {
@@ -161,7 +180,7 @@ public class UserInterface {
         trainSearchCommand(command);
         break;
       case "informationBoard":
-        printInformationBoard();
+        informationBoardCommand(command);
         break;
       default:
         System.out.println("\nUnknown command: " + command);
@@ -229,6 +248,12 @@ public class UserInterface {
         System.out.println("\nUnknown command: " + command);
         break;
     }
+  }
+
+  private void informationBoardCommand(String [] command) {
+    System.out.println("\n");
+    printInformationBoard();
+    waitForUser();
   }
 
   private void searchByTrainNumberCommand(String [] command) {
