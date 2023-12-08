@@ -3,10 +3,19 @@ package edu.ntnu.stud;
 import java.time.LocalTime;
 
 public class UserInterface {
+  private final MenuBuilder menus = new MenuBuilder();
   private final TrainDepartureRegistry trainDepartureRegistry = new TrainDepartureRegistry();
   private LocalTime currentTime = LocalTime.of(0, 0);
 
   public void init() {
+    menus.addMenu("mainMenu");
+    menus.setPrompt("mainMenu", "Main menu");
+    menus.addMenuOption("mainMenu", "Configure train departures", 1, "go trainMenu");
+    menus.addMenuOption("mainMenu", "Set time", 2, "time prompt");
+    menus.addMenuOption("mainMenu", "View information board", 3, "train informationBoard");
+    menus.addMenuOption("mainMenu", "Help", 4, "help");
+    menus.addMenuOption("mainMenu", "Quit", 5, "quit");
+
     trainDepartureRegistry.newTrainDeparture(10, "A4", "Trondheim", LocalTime.of(6, 15));
     trainDepartureRegistry.newTrainDeparture(4, "A7", "Oslo", LocalTime.of(14, 45));
     trainDepartureRegistry.newTrainDeparture(54, "F6", "Bergen", LocalTime.of(6, 0));
@@ -16,7 +25,7 @@ public class UserInterface {
   }
 
   public void start() {
-
+    menus.displayMenu("mainMenu");
   }
 
   private void addDeparture(int trainNumber, String line, String destination, LocalTime departureTime) {
