@@ -6,6 +6,7 @@ public class UserInterface {
   private final MenuBuilder menus = new MenuBuilder();
   private final TrainDepartureRegistry trainDepartureRegistry = new TrainDepartureRegistry();
   private LocalTime currentTime = LocalTime.of(0, 0);
+  private String selectedMenu = "mainMenu";
 
   public void init() {
     menus.addMenu("mainMenu");
@@ -45,7 +46,17 @@ public class UserInterface {
   }
 
   public void start() {
-    menus.displayMenu("mainMenu");
+    while (true) {
+      String command = goToMenu(selectedMenu);
+      runCommand(command);
+    }
+  }
+
+
+  private String goToMenu(String menuName) {
+    menus.displayMenu(menuName);
+    int choice = UserInput.promptInt("Enter one of the options above:");
+    return menus.selectOption(menuName, choice);
   }
 
   private void addDeparture(int trainNumber, String line, String destination, LocalTime departureTime) {
@@ -96,6 +107,9 @@ public class UserInterface {
     if (newTime.isBefore(currentTime)) {
       throw new IllegalArgumentException("Time cannot be before current time.");
     }
+  }
+
+  private void runCommand(String command) {
   }
 
   private void promptAddDeparture() {
