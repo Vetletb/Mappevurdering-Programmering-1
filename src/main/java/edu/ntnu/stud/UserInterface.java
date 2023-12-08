@@ -244,6 +244,32 @@ public class UserInterface {
         break;
     }
   }
+
+  private void addDelayCommand(String [] command) {
+    String nextCommandWord = command[3];
+    if (nextCommandWord.equals("prompt")) {
+      promptAddDelay();
+    } else if (command.length == 5) {
+      int trainNumber = Integer.parseInt(command[3]);
+      String timeString = command[4];
+      LocalTime delay = timeFromString(timeString);
+      addDelay(trainNumber, delay);
+    } else {
+      System.out.println("Unknown command: " + command);
+    }
+  }
+
+  private void setTrackCommand(String [] command) {
+    String nextCommandWord = command[3];
+    if (nextCommandWord.equals("prompt")) {
+      promptSetTrack();
+    } else if (command.length == 5) {
+      int trainNumber = Integer.parseInt(command[3]);
+      int track = Integer.parseInt(command[4]);
+      setTrack(trainNumber, track);
+    } else {
+      System.out.println("Unknown command: " + command);
+    }
   }
 
 
