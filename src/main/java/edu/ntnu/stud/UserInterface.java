@@ -205,6 +205,31 @@ public class UserInterface {
         break;
     }
   }
+
+  private void searchByTrainNumberCommand(String [] command) {
+    String nextCommandWord = command[3];
+    if (nextCommandWord.equals("prompt")) {
+      promptSearchByTrainNumber();
+    } else if (command.length == 5) {
+      int trainNumber = Integer.parseInt(command[4]);
+      searchByTrainNumber(trainNumber);
+    } else {
+      System.out.println("Unknown command: " + command);
+    }
+  }
+
+  private void searchByDestinationCommand(String [] command) {
+    String nextCommandWord = command[3];
+    if (nextCommandWord.equals("prompt")) {
+      promptSearchByDestination();
+    } else if (command.length == 5) {
+      String destination = command[4];
+      searchByDestination(destination);
+    } else {
+      System.out.println("Unknown command: " + command);
+    }
+  }
+
   private void editTrainCommand(String [] command) {
     String nextCommandWord = command[2];
     switch (nextCommandWord) {
@@ -212,7 +237,7 @@ public class UserInterface {
         addDelayCommand(command);
         break;
       case "setTrack":
-        setTrackCommand();
+        setTrackCommand(command);
         break;
       default:
         System.out.println("Unknown command: " + command);
@@ -220,6 +245,7 @@ public class UserInterface {
     }
   }
   }
+
 
   private void promptAddDeparture() {
     int trainNumber = promptTrainNumber();
