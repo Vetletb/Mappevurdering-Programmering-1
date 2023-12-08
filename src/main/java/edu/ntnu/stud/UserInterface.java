@@ -1,13 +1,16 @@
 package edu.ntnu.stud;
 
 import java.time.LocalTime;
+import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class UserInterface {
   private final MenuBuilder menus = new MenuBuilder();
   private final TrainDepartureRegistry trainDepartureRegistry = new TrainDepartureRegistry();
   private LocalTime currentTime = LocalTime.of(0, 0);
   private String selectedMenu = "mainMenu";
-  boolean exit = false;
+  private boolean exit = false;
 
   public void init() {
     menus.addMenu("mainMenu");
@@ -68,22 +71,56 @@ public class UserInterface {
   }
 
 
-  private void addDeparture(int trainNumber, String line, String destination, LocalTime departureTime) {
-    Validation.validateTimeAfter(currentTime, departureTime);
-    trainDepartureRegistry.newTrainDeparture(trainNumber, line, destination, departureTime);
+  private boolean addDeparture(int trainNumber, String line, String destination, LocalTime departureTime) {
+    boolean success = false;
+    try {
+      Validation.validateNotNull(departureTime, "Departure time");
+      Validation.validateTimeAfter(currentTime, departureTime);
+      trainDepartureRegistry.newTrainDeparture(trainNumber, line, destination, departureTime);
+      success = true;
+    } catch (IllegalArgumentException e) {
+      System.out.println("\n" + "Departure not added, reason: " + e.getMessage());
+    }
+    return success;
   }
 
   private void setTrack(int trainNumber, int track) {
+    try {
     trainDepartureRegistry.setTrack(trainNumber, track);
+    } catch (IllegalArgumentException e) {
+      System.out.println("\n" + e.getMessage());
+    }
   }
 
   private void addDelay(int trainNumber, LocalTime delay) {
+    try {
     trainDepartureRegistry.addDelay(trainNumber, delay);
+    } catch (IllegalArgumentException e) {
+      System.out.println("\n" + e.getMessage());
+    }
   }
 
   private void searchByTrainNumber(int trainNumber) {
     String departure = trainDepartureRegistry.getTrainDepartureString(trainNumber);
     System.out.println(departure);
+  private ArrayList<Integer> sortedTrainDepartures() {
+    return trainDepartureRegistry.sortedByDepartureTime();
+  }
+
+  private HashMap<String, String> trainDepartureInfo(int trainNumber) {
+    return trainDepartureRegistry.getAllFromTrainNumber(trainNumber);
+  }
+
+  private boolean searchByTrainNumber(int trainNumber) {
+    boolean success = false;
+    try {
+      String departure = trainDepartureRegistry.getTrainDepartureString(trainNumber);
+      System.out.println(departure);
+      success = true;
+    } catch (IllegalArgumentException e) {
+      System.out.println("\n" + e.getMessage());
+    }
+    return success;
   }
 
   private void searchByDestination(String destination) {
@@ -120,18 +157,29 @@ public class UserInterface {
     trainDepartureRegistry.removeTrainDeparturesBeforeTime(currentTime);
   }
 
-  private void setCurrentTime(LocalTime time) {
-    Validation.validateTimeAfter(currentTime, time);
-    updateDeparted();
-    currentTime = time;
+  private boolean setCurrentTime(LocalTime time) {
+    boolean success = false;
+    try {
+      Validation.validateNotNull(time, "Time");
+      Validation.validateTimeAfter(currentTime, time);
+      currentTime = time;
+      updateDeparted();
+      success = true;
+    } catch (IllegalArgumentException e) {
+      System.out.println("\n" + "Time not set");
+    }
+    return success;
   }
 
 
   public LocalTime timeFromString(String timeString) {
-    String[] timeArray = timeString.split(":");
-    int hours = Integer.parseInt(timeArray[0]);
-    int minutes = Integer.parseInt(timeArray[1]);
-    return LocalTime.of(hours, minutes);
+    LocalTime time = null;
+    try {
+      time = LocalTime.parse(timeString);
+    } catch (DateTimeParseException e) {
+      System.out.println("\nTime must be in the format HH:mm");
+    }
+    return time;
   }
 
 
@@ -208,7 +256,7 @@ public class UserInterface {
     if (nextCommandWord.equals("prompt")) {
       promptAddDeparture();
       waitForUser();
-    } else if (command.length == 6) {
+    } else if (command.length == 7) {
       int trainNumber = Integer.parseInt(command[3]);
       String line = command[4];
       String destination = command[5];
@@ -317,9 +365,11 @@ public class UserInterface {
     String line = promptLine();
     String destination = promptDestination();
     LocalTime departureTime = promptTime();
-    addDeparture(trainNumber, line, destination, departureTime);
-    System.out.println("\nTrain departure added successfully:");
-    searchByTrainNumber(trainNumber);
+    boolean success = addDeparture(trainNumber, line, destination, departureTime);
+    if (success) {
+      System.out.println("\nTrain departure added successfully:");
+      searchByTrainNumber(trainNumber);
+    }
   }
 
   private void promptSetTrack() {
@@ -352,8 +402,10 @@ public class UserInterface {
 
   private void promptSetCurrentTime() {
     LocalTime time = promptTime();
-    setCurrentTime(time);
-    System.out.println("\nTime set to " + time);
+    boolean success = setCurrentTime(time);
+    if (success) {
+      System.out.println("\nTime set to " + time);
+    }
   }
 
   private int promptTrainNumber() {
