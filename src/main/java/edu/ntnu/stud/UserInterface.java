@@ -91,7 +91,7 @@ public class UserInterface {
   }
 
   private void setCurrentTime(LocalTime time) {
-    validateTimeNotBefore(currentTime, time);
+    Validation.validateTimeAfter(currentTime, time);
     updateDeparted();
     currentTime = time;
   }
@@ -101,12 +101,6 @@ public class UserInterface {
     int hours = Integer.parseInt(timeArray[0]);
     int minutes = Integer.parseInt(timeArray[1]);
     return LocalTime.of(hours, minutes);
-  }
-
-  public void validateTimeNotBefore(LocalTime currentTime, LocalTime newTime) {
-    if (newTime.isBefore(currentTime)) {
-      throw new IllegalArgumentException("Time cannot be before current time.");
-    }
   }
 
 

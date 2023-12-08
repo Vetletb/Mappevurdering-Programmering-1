@@ -70,7 +70,7 @@ public class TrainDepartureRegistry {
    * @param destination the destination
    */
   public TrainDepartureRegistry getTrainDeparturesByDestination(String destination) {
-    validateStringNotBlank(destination, "Destination");
+    Validation.validateStringNotBlank(destination, "Destination");
     var result = new TrainDepartureRegistry();
     trainDepartures.values().stream()
         .filter(trainDeparture -> trainDeparture.getDestination().equals(destination))
@@ -136,7 +136,7 @@ public class TrainDepartureRegistry {
    * @param time the time
    */
   public void removeTrainDeparturesBeforeTime(LocalTime time) {
-    validateNotNull(time, "Time");
+    Validation.validateNotNull(time, "Time");
     List<Integer> trainsToRemove = trainDepartures.values().stream()
         .filter(trainDeparture -> trainDeparture.departureTimeWithDelay().isBefore(time))
         .map(TrainDeparture::getTrainNumber)
@@ -168,16 +168,5 @@ public class TrainDepartureRegistry {
         .collect(Collectors.joining("\n"));
   }
 
-  public void validateNotNull(Object object, String name) {
-    if (object == null) {
-      throw new IllegalArgumentException(name + " cannot be null");
-    }
-  }
-
-  public void validateStringNotBlank(String string, String name) {
-    if (string.isBlank()) {
-      throw new IllegalArgumentException(name + " cannot be blank");
-    }
-  }
 }
 
