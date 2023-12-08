@@ -16,6 +16,26 @@ public class UserInterface {
     menus.addMenuOption("mainMenu", "Help", 4, "help");
     menus.addMenuOption("mainMenu", "Quit", 5, "quit");
 
+    menus.addMenu("trainMenu");
+    menus.addMenuOption("trainMenu", "Add departure", 1, "train add prompt");
+    menus.addMenuOption("trainMenu", "Edit departure", 2, "go editTrainMenu");
+    menus.addMenuOption("trainMenu", "Search departure", 3, "go trainSearchMenu");
+    menus.addMenuOption("trainMenu", "List all", 4, "train list");
+    menus.addMenuOption("trainMenu", "Main menu", 5, "go mainMenu");
+
+    menus.addMenu("trainSearchMenu");
+    menus.addMenuOption("trainSearchMenu", "Search by train number", 1, "train search trainNumber prompt");
+    menus.addMenuOption("trainSearchMenu", "Search by destination", 2, "train search destination prompt");
+    menus.addMenuOption("trainSearchMenu", "Train Configuration", 3, "go trainMenu");
+    menus.addMenuOption("trainSearchMenu", "Main menu", 4, "go mainMenu");
+
+    menus.addMenu("editTrainMenu");
+    menus.addMenuOption("editTrainMenu", "Add delay", 1, "train edit addDelay prompt");
+    menus.addMenuOption("editTrainMenu", "Set track", 2, "train edit setTrack prompt");
+    menus.addMenuOption("editTrainMenu", "Train Configuration", 3, "go trainMenu");
+    menus.addMenuOption("editTrainMenu", "Main menu", 4, "go mainMenu");
+
+
     trainDepartureRegistry.newTrainDeparture(10, "A4", "Trondheim", LocalTime.of(6, 15));
     trainDepartureRegistry.newTrainDeparture(4, "A7", "Oslo", LocalTime.of(14, 45));
     trainDepartureRegistry.newTrainDeparture(54, "F6", "Bergen", LocalTime.of(6, 0));
