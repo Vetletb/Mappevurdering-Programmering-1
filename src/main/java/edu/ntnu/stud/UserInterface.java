@@ -7,6 +7,7 @@ public class UserInterface {
   private final TrainDepartureRegistry trainDepartureRegistry = new TrainDepartureRegistry();
   private LocalTime currentTime = LocalTime.of(0, 0);
   private String selectedMenu = "mainMenu";
+  boolean exit = false;
 
   public void init() {
     menus.addMenu("mainMenu");
@@ -46,10 +47,11 @@ public class UserInterface {
   }
 
   public void start() {
-    while (true) {
+    while (!exit) {
       String command = goToMenu(selectedMenu);
       runCommand(command);
     }
+    System.exit(0);
   }
 
 
@@ -71,12 +73,12 @@ public class UserInterface {
     trainDepartureRegistry.newTrainDeparture(trainNumber, line, destination, departureTime);
   }
 
-  private void addDelay(int trainNumber, LocalTime delay) {
-    trainDepartureRegistry.addDelay(trainNumber, delay);
-  }
-
   private void setTrack(int trainNumber, int track) {
     trainDepartureRegistry.setTrack(trainNumber, track);
+  }
+
+  private void addDelay(int trainNumber, LocalTime delay) {
+    trainDepartureRegistry.addDelay(trainNumber, delay);
   }
 
   private void searchByTrainNumber(int trainNumber) {
@@ -90,12 +92,13 @@ public class UserInterface {
     System.out.println(trainDepartures);
   }
 
-  private void updateDeparted() {
-    trainDepartureRegistry.removeTrainDeparturesBeforeTime(currentTime);
+  private void printInformationBoard() {
+    System.out.println("\nInformation board       Current time " + currentTime);
+    System.out.println(trainDepartureRegistry);
   }
 
-  private void printInformationBoard() {
-    System.out.println(trainDepartureRegistry);
+  private void updateDeparted() {
+    trainDepartureRegistry.removeTrainDeparturesBeforeTime(currentTime);
   }
 
   private void setCurrentTime(LocalTime time) {
@@ -103,6 +106,7 @@ public class UserInterface {
     updateDeparted();
     currentTime = time;
   }
+
 
   public LocalTime timeFromString(String timeString) {
     String[] timeArray = timeString.split(":");
@@ -128,6 +132,8 @@ public class UserInterface {
       case "time":
         timeCommand(commands);
         break;
+      case "help":
+        System.out.println("\nhelp");
       default:
         System.out.println("\nUnknown command: " + command);
         break;
@@ -139,7 +145,7 @@ public class UserInterface {
   }
 
   private void quitCommand() {
-    System.exit(0);
+    exit = true;
   }
 
   private void trainCommand(String [] command) {
@@ -210,6 +216,21 @@ public class UserInterface {
     }
   }
 
+  private void editTrainCommand(String [] command) {
+    String nextCommandWord = command[2];
+    switch (nextCommandWord) {
+      case "addDelay":
+        addDelayCommand(command);
+        break;
+      case "setTrack":
+        setTrackCommand(command);
+        break;
+      default:
+        System.out.println("\nUnknown command: " + command);
+        break;
+    }
+  }
+
   private void searchByTrainNumberCommand(String [] command) {
     String nextCommandWord = command[3];
     if (nextCommandWord.equals("prompt")) {
@@ -233,21 +254,6 @@ public class UserInterface {
       searchByDestination(destination);
     } else {
       System.out.println("\nUnknown command: " + command);
-    }
-  }
-
-  private void editTrainCommand(String [] command) {
-    String nextCommandWord = command[2];
-    switch (nextCommandWord) {
-      case "addDelay":
-        addDelayCommand(command);
-        break;
-      case "setTrack":
-        setTrackCommand(command);
-        break;
-      default:
-        System.out.println("\nUnknown command: " + command);
-        break;
     }
   }
 
@@ -291,18 +297,18 @@ public class UserInterface {
     searchByTrainNumber(trainNumber);
   }
 
-  private void promptAddDelay() {
-    int trainNumber = promptTrainNumber();
-    LocalTime delay = promptTime();
-    addDelay(trainNumber, delay);
-    System.out.println("\nUpdated train info:");
-    searchByTrainNumber(trainNumber);
-  }
-
   private void promptSetTrack() {
     int trainNumber = promptTrainNumber();
     int track = promptTrack();
     setTrack(trainNumber, track);
+    System.out.println("\nUpdated train info:");
+    searchByTrainNumber(trainNumber);
+  }
+
+  private void promptAddDelay() {
+    int trainNumber = promptTrainNumber();
+    LocalTime delay = promptTime();
+    addDelay(trainNumber, delay);
     System.out.println("\nUpdated train info:");
     searchByTrainNumber(trainNumber);
   }
@@ -329,13 +335,13 @@ public class UserInterface {
     return UserInput.promptInt("\nEnter train number:");
   }
 
-  private String promptDestination() {
-    return UserInput.promptString("\nEnter destination:");
-  }
-
   private LocalTime promptTime() {
     String timeString = UserInput.promptString("\nEnter time (format HH:mm):");
     return timeFromString(timeString);
+  }
+
+  private String promptDestination() {
+    return UserInput.promptString("\nEnter destination:");
   }
 
   private String promptLine() {
