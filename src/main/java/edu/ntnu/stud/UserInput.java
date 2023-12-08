@@ -20,7 +20,6 @@ public class UserInput {
         valid = true;
       } catch (NumberFormatException e) {
         System.out.println("Please enter a number.");
-        scanner.nextLine();
       }
     }
     return intInput;
