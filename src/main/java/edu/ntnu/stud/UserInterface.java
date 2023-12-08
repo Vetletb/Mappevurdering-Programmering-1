@@ -109,7 +109,28 @@ public class UserInterface {
     }
   }
 
+
   private void runCommand(String command) {
+    String [] commands = command.split(" ");
+    String primaryCommand = commands[0];
+    switch (primaryCommand) {
+      case "go":
+        goCommand(commands);
+        break;
+      case "quit":
+        quitCommand();
+        break;
+      case "train":
+        trainCommand(commands);
+        break;
+      case "time":
+        timeCommand(commands);
+        break;
+      default:
+        System.out.println("Unknown command: " + command);
+        break;
+    }
+  }
   }
 
   private void promptAddDeparture() {
