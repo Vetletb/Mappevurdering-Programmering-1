@@ -18,8 +18,7 @@ public class UserInterface {
     menus.addMenuOption("mainMenu", "Configure train departures", 1, "go trainMenu");
     menus.addMenuOption("mainMenu", "Set time", 2, "time prompt");
     menus.addMenuOption("mainMenu", "View information board", 3, "train informationBoard");
-    menus.addMenuOption("mainMenu", "Help", 4, "help");
-    menus.addMenuOption("mainMenu", "Quit", 5, "quit");
+    menus.addMenuOption("mainMenu", "Quit", 4, "quit");
 
     menus.addMenu("trainMenu");
     menus.addMenuOption("trainMenu", "Add departure", 1, "train add prompt");
@@ -50,17 +49,19 @@ public class UserInterface {
   }
 
   public void start() {
+    System.out.println("Train Departure Application v1.0");
     while (!exit) {
       String command = goToMenu(selectedMenu);
       runCommand(command);
     }
+    System.out.println("\nExiting Train Departure Application...");
     System.exit(0);
   }
 
 
   private String goToMenu(String menuName) {
     System.out.println("\n");
-    System.out.println("Time: " + currentTime);
+    System.out.println("Current time " + currentTime);
     menus.displayMenu(menuName);
     int choice = UserInput.promptInt("Enter one of the options above:");
     return menus.selectOption(menuName, choice);
@@ -100,9 +101,6 @@ public class UserInterface {
     }
   }
 
-  private void searchByTrainNumber(int trainNumber) {
-    String departure = trainDepartureRegistry.getTrainDepartureString(trainNumber);
-    System.out.println(departure);
   private ArrayList<Integer> sortedTrainDepartures() {
     return trainDepartureRegistry.sortedByDepartureTime();
   }
@@ -191,7 +189,7 @@ public class UserInterface {
         goCommand(commands);
         break;
       case "quit":
-        quitCommand();
+        quitCommand(commands);
         break;
       case "train":
         trainCommand(commands);
@@ -199,10 +197,8 @@ public class UserInterface {
       case "time":
         timeCommand(commands);
         break;
-      case "help":
-        System.out.println("\nhelp");
       default:
-        System.out.println("\nUnknown command: " + command);
+        System.out.println("\nUnknown command");
         break;
     }
   }
@@ -211,7 +207,7 @@ public class UserInterface {
     selectedMenu = commands[1];
   }
 
-  private void quitCommand() {
+  private void quitCommand(String [] commands) {
     exit = true;
   }
 
@@ -231,7 +227,7 @@ public class UserInterface {
         informationBoardCommand(command);
         break;
       default:
-        System.out.println("\nUnknown command: " + command);
+        System.out.println("\nUnknown command");
         break;
     }
   }
@@ -246,7 +242,7 @@ public class UserInterface {
       LocalTime time = timeFromString(timeString);
       setCurrentTime(time);
     } else {
-      System.out.println("\nUnknown command: " + command);
+      System.out.println("\nUnknown command");
     }
   }
 
@@ -264,7 +260,7 @@ public class UserInterface {
       LocalTime departureTime = timeFromString(timeString);
       addDeparture(trainNumber, line, destination, departureTime);
     } else {
-      System.out.println("\nUnknown command: " + command);
+      System.out.println("\nUnknown command");
     }
   }
 
@@ -278,7 +274,7 @@ public class UserInterface {
         searchByDestinationCommand(command);
         break;
       default:
-        System.out.println("\nUnknown command: " + command);
+        System.out.println("\nUnknown command");
         break;
     }
   }
@@ -293,7 +289,7 @@ public class UserInterface {
         setTrackCommand(command);
         break;
       default:
-        System.out.println("\nUnknown command: " + command);
+        System.out.println("\nUnknown command");
         break;
     }
   }
@@ -313,7 +309,7 @@ public class UserInterface {
       int trainNumber = Integer.parseInt(command[4]);
       searchByTrainNumber(trainNumber);
     } else {
-      System.out.println("\nUnknown command: " + command);
+      System.out.println("\nUnknown command");
     }
   }
 
@@ -326,7 +322,7 @@ public class UserInterface {
       String destination = command[4];
       searchByDestination(destination);
     } else {
-      System.out.println("\nUnknown command: " + command);
+      System.out.println("\nUnknown command");
     }
   }
 
@@ -341,7 +337,7 @@ public class UserInterface {
       int delay = Integer.parseInt(delayString);
       addDelay(trainNumber, delay);
     } else {
-      System.out.println("\nUnknown command: " + command);
+      System.out.println("\nUnknown command");
     }
   }
 
@@ -355,7 +351,7 @@ public class UserInterface {
       int track = Integer.parseInt(command[4]);
       setTrack(trainNumber, track);
     } else {
-      System.out.println("\nUnknown command: " + command);
+      System.out.println("\nUnknown command");
     }
   }
 
