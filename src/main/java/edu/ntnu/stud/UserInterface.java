@@ -131,6 +131,48 @@ public class UserInterface {
         break;
     }
   }
+
+  private void goCommand(String [] commands) {
+    selectedMenu = commands[1];
+  }
+
+  private void quitCommand() {
+    System.exit(0);
+  }
+
+  private void trainCommand(String [] command) {
+    String nextCommandWord = command[1];
+    switch (nextCommandWord) {
+      case "add":
+        trainAddCommand(command);
+        break;
+      case "edit":
+        editTrainCommand(command);
+        break;
+      case "search":
+        trainSearchCommand(command);
+        break;
+      case "informationBoard":
+        printInformationBoard();
+        break;
+      default:
+        System.out.println("Unknown command: " + command);
+        break;
+    }
+  }
+
+  private void timeCommand(String [] command) {
+    String nextCommandWord = command[1];
+    if (nextCommandWord.equals("prompt")) {
+      promptSetCurrentTime();
+    } else if (command.length == 4) {
+      String timeString = command[2];
+      LocalTime time = timeFromString(timeString);
+      setCurrentTime(time);
+    } else {
+      System.out.println("Unknown command: " + command);
+    }
+  }
   }
 
   private void promptAddDeparture() {
