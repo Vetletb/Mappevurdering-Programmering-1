@@ -61,6 +61,11 @@ public class UserInterface {
     return menus.selectOption(menuName, choice);
   }
 
+  private void waitForUser() {
+    UserInput.promptString("\nPress enter to continue...");
+  }
+
+
   private void addDeparture(int trainNumber, String line, String destination, LocalTime departureTime) {
     Validation.validateTimeAfter(currentTime, departureTime);
     trainDepartureRegistry.newTrainDeparture(trainNumber, line, destination, departureTime);
@@ -162,6 +167,7 @@ public class UserInterface {
     String nextCommandWord = command[1];
     if (nextCommandWord.equals("prompt")) {
       promptSetCurrentTime();
+      waitForUser();
     } else if (command.length == 4) {
       String timeString = command[2];
       LocalTime time = timeFromString(timeString);
@@ -176,6 +182,7 @@ public class UserInterface {
     String nextCommandWord = command[2];
     if (nextCommandWord.equals("prompt")) {
       promptAddDeparture();
+      waitForUser();
     } else if (command.length == 6) {
       int trainNumber = Integer.parseInt(command[3]);
       String line = command[4];
@@ -207,6 +214,7 @@ public class UserInterface {
     String nextCommandWord = command[3];
     if (nextCommandWord.equals("prompt")) {
       promptSearchByTrainNumber();
+      waitForUser();
     } else if (command.length == 5) {
       int trainNumber = Integer.parseInt(command[4]);
       searchByTrainNumber(trainNumber);
@@ -219,6 +227,7 @@ public class UserInterface {
     String nextCommandWord = command[3];
     if (nextCommandWord.equals("prompt")) {
       promptSearchByDestination();
+      waitForUser();
     } else if (command.length == 5) {
       String destination = command[4];
       searchByDestination(destination);
@@ -246,6 +255,7 @@ public class UserInterface {
     String nextCommandWord = command[3];
     if (nextCommandWord.equals("prompt")) {
       promptAddDelay();
+      waitForUser();
     } else if (command.length == 5) {
       int trainNumber = Integer.parseInt(command[3]);
       String timeString = command[4];
@@ -260,6 +270,7 @@ public class UserInterface {
     String nextCommandWord = command[3];
     if (nextCommandWord.equals("prompt")) {
       promptSetTrack();
+      waitForUser();
     } else if (command.length == 5) {
       int trainNumber = Integer.parseInt(command[3]);
       int track = Integer.parseInt(command[4]);
