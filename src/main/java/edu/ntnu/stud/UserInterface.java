@@ -173,6 +173,52 @@ public class UserInterface {
       System.out.println("Unknown command: " + command);
     }
   }
+
+
+  private void trainAddCommand(String [] command) {
+    String nextCommandWord = command[2];
+    if (nextCommandWord.equals("prompt")) {
+      promptAddDeparture();
+    } else if (command.length == 6) {
+      int trainNumber = Integer.parseInt(command[3]);
+      String line = command[4];
+      String destination = command[5];
+      String timeString = command[6];
+      LocalTime departureTime = timeFromString(timeString);
+      addDeparture(trainNumber, line, destination, departureTime);
+    } else {
+      System.out.println("Unknown command: " + command);
+    }
+  }
+
+  private void trainSearchCommand(String [] command) {
+    String searchType = command[2];
+    switch (searchType) {
+      case "trainNumber":
+        searchByTrainNumberCommand(command);
+        break;
+      case "destination":
+        searchByDestinationCommand(command);
+        break;
+      default:
+        System.out.println("Unknown command: " + command);
+        break;
+    }
+  }
+  private void editTrainCommand(String [] command) {
+    String nextCommandWord = command[2];
+    switch (nextCommandWord) {
+      case "addDelay":
+        addDelayCommand(command);
+        break;
+      case "setTrack":
+        setTrackCommand();
+        break;
+      default:
+        System.out.println("Unknown command: " + command);
+        break;
+    }
+  }
   }
 
   private void promptAddDeparture() {
