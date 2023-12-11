@@ -11,12 +11,13 @@ public class UserInterface {
   private LocalTime currentTime = LocalTime.of(0, 0);
   private String selectedMenu = MAIN_MENU;
   private boolean exit = false;
-  private static final boolean COMMAND_MODE = false;
+  private static final boolean COMMAND_MODE = true;
   private static final String MAIN_MENU = "mainMenu";
   private static final String TRAIN_MENU = "trainMenu";
   private static final String TRAIN_SEARCH_MENU = "trainSearchMenu";
   private static final String EDIT_TRAIN_MENU = "trainEditMenu";
-  private static final String COMMAND_FAIL = "\nCommand unknown";
+  private static final String COMMAND_UNKNOWN_MESSAGE = "\nCommand unknown";
+  private static final String COMMAND_SUCCESS_MESSAGE = "\nCommand successful";
 
   public void init() {
     menus.addMenu(MAIN_MENU);
@@ -24,7 +25,7 @@ public class UserInterface {
     menus.addMenuOption(MAIN_MENU, "Configure train departures", 1, "go " + TRAIN_MENU);
     menus.addMenuOption(MAIN_MENU, "Set time", 2, "time prompt");
     menus.addMenuOption(MAIN_MENU, "View information board", 3, "train informationBoard");
-    menus.addMenuOption(MAIN_MENU, "Quit", 4, "quit");
+    menus.addMenuOption(MAIN_MENU, "Quit", 4, "exit");
 
     menus.addMenu(TRAIN_MENU);
     menus.addMenuOption(TRAIN_MENU, "Add departure", 1, "train add prompt");
@@ -206,7 +207,7 @@ public class UserInterface {
       case "go":
         goCommand(commands);
         break;
-      case "quit":
+      case "exit":
         quitCommand(commands);
         break;
       case "train":
@@ -216,7 +217,7 @@ public class UserInterface {
         timeCommand(commands);
         break;
       default:
-        System.out.println(COMMAND_FAIL);
+        System.out.println(COMMAND_UNKNOWN_MESSAGE);
         break;
     }
   }
@@ -229,7 +230,7 @@ public class UserInterface {
     if (commands.length == 1) {
       exit = true;
     } else {
-      System.out.println(COMMAND_FAIL);
+      System.out.println(COMMAND_UNKNOWN_MESSAGE);
     }
   }
 
@@ -249,7 +250,7 @@ public class UserInterface {
         informationBoardCommand(command);
         break;
       default:
-        System.out.println(COMMAND_FAIL);
+        System.out.println(COMMAND_UNKNOWN_MESSAGE);
         break;
     }
   }
@@ -261,9 +262,12 @@ public class UserInterface {
       waitForUser();
     } else if (command.length == 2) {
       LocalTime time = timeFromString(nextCommandWord);
-      setCurrentTime(time);
+      boolean success = setCurrentTime(time);
+      if (success) {
+        System.out.println(COMMAND_SUCCESS_MESSAGE);
+      }
     } else {
-      System.out.println(COMMAND_FAIL);
+      System.out.println(COMMAND_UNKNOWN_MESSAGE);
     }
   }
 
@@ -279,9 +283,12 @@ public class UserInterface {
       String destination = command[4];
       String timeString = command[5];
       LocalTime departureTime = timeFromString(timeString);
-      addDeparture(trainNumber, line, destination, departureTime);
+      boolean success = addDeparture(trainNumber, line, destination, departureTime);
+      if (success) {
+        System.out.println(COMMAND_SUCCESS_MESSAGE);
+      }
     } else {
-      System.out.println(COMMAND_FAIL);
+      System.out.println(COMMAND_UNKNOWN_MESSAGE);
     }
   }
 
@@ -295,7 +302,7 @@ public class UserInterface {
         searchByDestinationCommand(command);
         break;
       default:
-        System.out.println(COMMAND_FAIL);
+        System.out.println(COMMAND_UNKNOWN_MESSAGE);
         break;
     }
   }
@@ -310,7 +317,7 @@ public class UserInterface {
         setTrackCommand(command);
         break;
       default:
-        System.out.println(COMMAND_FAIL);
+        System.out.println(COMMAND_UNKNOWN_MESSAGE);
         break;
     }
   }
@@ -330,7 +337,7 @@ public class UserInterface {
       int trainNumber = Integer.parseInt(nextCommandWord);
       searchByTrainNumber(trainNumber);
     } else {
-      System.out.println(COMMAND_FAIL);
+      System.out.println(COMMAND_UNKNOWN_MESSAGE);
     }
   }
 
@@ -342,7 +349,7 @@ public class UserInterface {
     } else if (command.length == 4) {
       searchByDestination(nextCommandWord);
     } else {
-      System.out.println(COMMAND_FAIL);
+      System.out.println(COMMAND_UNKNOWN_MESSAGE);
     }
   }
 
@@ -355,9 +362,12 @@ public class UserInterface {
       int trainNumber = Integer.parseInt(nextCommandWord);
       String delayString = command[4];
       int delay = Integer.parseInt(delayString);
-      addDelay(trainNumber, delay);
+      boolean success = addDelay(trainNumber, delay);
+      if (success) {
+        System.out.println(COMMAND_SUCCESS_MESSAGE);
+      }
     } else {
-      System.out.println(COMMAND_FAIL);
+      System.out.println(COMMAND_UNKNOWN_MESSAGE);
     }
   }
 
@@ -369,9 +379,12 @@ public class UserInterface {
     } else if (command.length == 5) {
       int trainNumber = Integer.parseInt(nextCommandWord);
       int track = Integer.parseInt(command[4]);
-      setTrack(trainNumber, track);
+      boolean success = setTrack(trainNumber, track);
+      if (success) {
+        System.out.println(COMMAND_SUCCESS_MESSAGE);
+      }
     } else {
-      System.out.println(COMMAND_FAIL);
+      System.out.println(COMMAND_UNKNOWN_MESSAGE);
     }
   }
 
