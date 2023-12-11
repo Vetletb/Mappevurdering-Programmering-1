@@ -20,14 +20,14 @@ public class TrainDepartureRegistry {
    *
    * @param trainNumber the train departures
    */
-  public TrainDeparture getTrainDeparture(int trainNumber) {
+  private TrainDeparture getTrainDeparture(int trainNumber) {
     validateTrainNumberExistence(trainNumber);
     return trainDepartures.get(trainNumber);
   }
 
   public String getTrainDepartureString(int trainNumber) {
     validateTrainNumberExistence(trainNumber);
-    return trainDepartures.get(trainNumber).toString();
+    return getTrainDeparture(trainNumber).toString();
   }
 
   /**

@@ -11,7 +11,7 @@ public class UserInterface {
   private LocalTime currentTime = LocalTime.of(0, 0);
   private String selectedMenu = MAIN_MENU;
   private boolean exit = false;
-  private static final boolean COMMAND_MODE = true;
+  private static final boolean COMMAND_MODE = false;
   private static final String MAIN_MENU = "mainMenu";
   private static final String TRAIN_MENU = "trainMenu";
   private static final String TRAIN_SEARCH_MENU = "trainSearchMenu";
@@ -127,16 +127,13 @@ public class UserInterface {
     return trainDepartureRegistry.getAllFromTrainNumber(trainNumber);
   }
 
-  private boolean searchByTrainNumber(int trainNumber) {
-    boolean success = false;
+  private void searchByTrainNumber(int trainNumber) {
     try {
       String departure = trainDepartureRegistry.getTrainDepartureString(trainNumber);
       System.out.println(departure);
-      success = true;
     } catch (IllegalArgumentException e) {
       System.out.println("\n" + "Train departure not found, reason: " + e.getMessage());
     }
-    return success;
   }
 
   private void searchByDestination(String destination) {
@@ -158,15 +155,13 @@ public class UserInterface {
     System.out.println("-".repeat(75));
     sortedTrainDepartures().stream()
         .map(this::trainDepartureInfo)
-        .forEach(info -> {
-          System.out.printf("%-12s%-11s%-18s%-16s%-12s%-11s\n",
-              info.get("trainNumber"),
-              info.get("line"),
-              info.get("destination"),
-              info.get("departureTime"),
-              info.get("track"),
-              info.get("delay"));
-        });
+        .forEach(info -> System.out.printf("%-12s%-11s%-18s%-16s%-12s%-11s\n",
+            info.get("trainNumber"),
+            info.get("line"),
+            info.get("destination"),
+            info.get("departureTime"),
+            info.get("track"),
+            info.get("delay")));
     System.out.println("-".repeat(75));
   }
 
@@ -249,6 +244,9 @@ public class UserInterface {
       case "informationBoard":
         informationBoardCommand(command);
         break;
+      case "list":
+        trainListCommand(command);
+        break;
       default:
         System.out.println(COMMAND_UNKNOWN_MESSAGE);
         break;
@@ -323,9 +321,24 @@ public class UserInterface {
   }
 
   private void informationBoardCommand(String [] command) {
-    System.out.println("\n");
-    printInformationBoard();
-    waitForUser();
+    if (command.length == 2) {
+      System.out.println(COMMAND_UNKNOWN_MESSAGE);
+      System.out.println("\n");
+      printInformationBoard();
+      waitForUser();
+    } else {
+      System.out.println(COMMAND_UNKNOWN_MESSAGE);
+    }
+  }
+
+  private void trainListCommand(String [] command) {
+    if (command.length == 2) {
+      System.out.println("\nTrain departures:\n");
+      System.out.println(trainDepartureRegistry);
+      waitForUser();
+    } else {
+      System.out.println(COMMAND_UNKNOWN_MESSAGE);
+    }
   }
 
   private void searchByTrainNumberCommand(String [] command) {
