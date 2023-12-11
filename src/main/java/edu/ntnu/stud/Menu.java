@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public class Menu {
 
-  private String prompt = "Please select an option:";
   private final ArrayList<MenuOption> menuOptions = new ArrayList<>();
+  private String prompt = "Please select an option:";
 
   public void addMenuOption(String option, int choice, String command) {
     MenuOption menuOption = new MenuOption(option, choice, command);

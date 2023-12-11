@@ -25,11 +25,6 @@ public class TrainDepartureRegistry {
     return trainDepartures.get(trainNumber);
   }
 
-  public String getTrainDepartureString(int trainNumber) {
-    validateTrainNumberExistence(trainNumber);
-    return getTrainDeparture(trainNumber).toString();
-  }
-
   /**
    * Creates and adds a new train departure.
    *
@@ -66,19 +61,6 @@ public class TrainDepartureRegistry {
     trainDepartures.get(trainNumber).setTrack(track);
   }
 
-  /**
-   * Creates train departure registry filtered from destination.
-   *
-   * @param destination the destination
-   */
-  public TrainDepartureRegistry getTrainDeparturesByDestination(String destination) {
-    Validation.validateStringNotBlank(destination, "Destination");
-    var result = new TrainDepartureRegistry();
-    trainDepartures.values().stream()
-        .filter(trainDeparture -> trainDeparture.getDestination().equals(destination))
-        .forEach(result::addTrainDeparture);
-    return result;
-  }
 
   /**
    * Checks if registry contains train departure.
@@ -121,7 +103,6 @@ public class TrainDepartureRegistry {
   }
 
 
-
   /**
    * Deletes a train departure.
    *
@@ -146,6 +127,21 @@ public class TrainDepartureRegistry {
     trainsToRemove.forEach(this::removeTrainDeparture);
   }
 
+
+  /**
+   * Creates train departure registry filtered from destination.
+   *
+   * @param destination the destination
+   */
+  public TrainDepartureRegistry trainDeparturesByDestination(String destination) {
+    Validation.validateStringNotBlank(destination, "Destination");
+    var result = new TrainDepartureRegistry();
+    trainDepartures.values().stream()
+        .filter(trainDeparture -> trainDeparture.getDestination().equals(destination))
+        .forEach(result::addTrainDeparture);
+    return result;
+  }
+
   /**
    * Returns a list of train numbers sorted by departure time.
    *
@@ -158,9 +154,14 @@ public class TrainDepartureRegistry {
         .collect(Collectors.toCollection(ArrayList::new));
   }
 
+  public String trainDepartureString(int trainNumber) {
+    validateTrainNumberExistence(trainNumber);
+    return getTrainDeparture(trainNumber).toString();
+  }
+
   public HashMap<String, String> getAllFromTrainNumber(int trainNumber) {
     validateTrainNumberExistence(trainNumber);
-    return trainDepartures.get(trainNumber).getAll();
+    return trainDepartures.get(trainNumber).trainInfo();
   }
 
   /**

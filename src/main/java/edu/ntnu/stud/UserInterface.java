@@ -8,10 +8,13 @@ import java.util.HashMap;
 public class UserInterface {
   private final MenuBuilder menus = new MenuBuilder();
   private final TrainDepartureRegistry trainDepartureRegistry = new TrainDepartureRegistry();
+
   private LocalTime currentTime = LocalTime.of(0, 0);
   private String selectedMenu = MAIN_MENU;
   private boolean exit = false;
+
   private static final boolean COMMAND_MODE = false;
+
   private static final String MAIN_MENU = "mainMenu";
   private static final String TRAIN_MENU = "trainMenu";
   private static final String TRAIN_SEARCH_MENU = "trainSearchMenu";
@@ -129,7 +132,7 @@ public class UserInterface {
 
   private void searchByTrainNumber(int trainNumber) {
     try {
-      String departure = trainDepartureRegistry.getTrainDepartureString(trainNumber);
+      String departure = trainDepartureRegistry.trainDepartureString(trainNumber);
       System.out.println(departure);
     } catch (IllegalArgumentException e) {
       System.out.println("\n" + "Train departure not found, reason: " + e.getMessage());
@@ -138,7 +141,7 @@ public class UserInterface {
 
   private void searchByDestination(String destination) {
     TrainDepartureRegistry trainDepartures = trainDepartureRegistry
-        .getTrainDeparturesByDestination(destination);
+        .trainDeparturesByDestination(destination);
     System.out.println(trainDepartures);
   }
 

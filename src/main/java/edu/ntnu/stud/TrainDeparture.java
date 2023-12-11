@@ -1,7 +1,6 @@
 package edu.ntnu.stud;
 
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -107,24 +106,6 @@ public class TrainDeparture {
     return track;
   }
 
-  public HashMap<String, String> getAll() {
-    HashMap<String, String> allInfo = new HashMap<>();
-    allInfo.put("departureTime", departureTime.toString());
-    allInfo.put("line", line);
-    allInfo.put("trainNumber", String.valueOf(trainNumber));
-    allInfo.put("destination", destination);
-    if (delay > 0) {
-      allInfo.put("delay", delay + " min");
-    } else {
-      allInfo.put("delay", "");
-    }
-    if (track != -1) {
-      allInfo.put("track", String.valueOf(track));
-    } else {
-      allInfo.put("track", "");
-    }
-    return allInfo;
-  }
 
   /**
    * Sets the delay.
@@ -146,22 +127,6 @@ public class TrainDeparture {
     this.track = track;
   }
 
-  /**
-   * Returns a string representation of the train departure.
-   *
-   * @return a string representation of the train departure
-   */
-  @Override
-  public String toString() {
-    var sb = new StringBuilder();
-    sb.append("Departure time: ").append(departureTime).append("\n");
-    sb.append("Line: ").append(line).append("\n");
-    sb.append("Train number: ").append(trainNumber).append("\n");
-    sb.append("Destination: ").append(destination).append("\n");
-    sb.append("Delay: ").append(delay).append("\n");
-    sb.append("Track: ").append(track).append("\n");
-    return sb.toString();
-  }
 
   /**
    * Adds a delay to the train departure.
@@ -180,5 +145,42 @@ public class TrainDeparture {
    */
   public LocalTime departureTimeWithDelay() {
     return departureTime.plusMinutes(delay);
+  }
+
+  public HashMap<String, String> trainInfo() {
+    HashMap<String, String> trainInfo = new HashMap<>();
+    trainInfo.put("departureTime", departureTime.toString());
+    trainInfo.put("line", line);
+    trainInfo.put("trainNumber", String.valueOf(trainNumber));
+    trainInfo.put("destination", destination);
+    if (delay > 0) {
+      trainInfo.put("delay", delay + " min");
+    } else {
+      trainInfo.put("delay", "");
+    }
+    if (track != -1) {
+      trainInfo.put("track", String.valueOf(track));
+    } else {
+      trainInfo.put("track", "");
+    }
+    return trainInfo;
+  }
+
+
+  /**
+   * Returns a string representation of the train departure.
+   *
+   * @return a string representation of the train departure
+   */
+  @Override
+  public String toString() {
+    var sb = new StringBuilder();
+    sb.append("Departure time: ").append(departureTime).append("\n");
+    sb.append("Line: ").append(line).append("\n");
+    sb.append("Train number: ").append(trainNumber).append("\n");
+    sb.append("Destination: ").append(destination).append("\n");
+    sb.append("Delay: ").append(delay).append("\n");
+    sb.append("Track: ").append(track).append("\n");
+    return sb.toString();
   }
 }

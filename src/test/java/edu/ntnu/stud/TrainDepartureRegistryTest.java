@@ -89,7 +89,7 @@ public class TrainDepartureRegistryTest {
       expectedRegistry.newTrainDeparture(3, "line3", "destination",
           LocalTime.of(0, 0));
       assertEquals(expectedRegistry.toString(),
-          trainDepartureRegistry.getTrainDeparturesByDestination("destination").toString());
+          trainDepartureRegistry.trainDeparturesByDestination("destination").toString());
     }
 
     @Test
@@ -97,7 +97,7 @@ public class TrainDepartureRegistryTest {
         + "on destination is blank")
     void getTrainDepartureByDestinationThrowsExceptionOnDestinationBlank() {
       assertThrows(IllegalArgumentException.class, () -> {
-        new TrainDepartureRegistry().getTrainDeparturesByDestination(" ");
+        new TrainDepartureRegistry().trainDeparturesByDestination(" ");
       });
     }
 
