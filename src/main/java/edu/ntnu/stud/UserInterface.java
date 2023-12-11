@@ -9,35 +9,41 @@ public class UserInterface {
   private final MenuBuilder menus = new MenuBuilder();
   private final TrainDepartureRegistry trainDepartureRegistry = new TrainDepartureRegistry();
   private LocalTime currentTime = LocalTime.of(0, 0);
-  private String selectedMenu = "mainMenu";
+  private String selectedMenu = MAIN_MENU;
   private boolean exit = false;
+  private static final boolean COMMAND_MODE = false;
+  private static final String MAIN_MENU = "mainMenu";
+  private static final String TRAIN_MENU = "trainMenu";
+  private static final String TRAIN_SEARCH_MENU = "trainSearchMenu";
+  private static final String EDIT_TRAIN_MENU = "trainEditMenu";
+  private static final String COMMAND_FAIL = "\nCommand unknown";
 
   public void init() {
-    menus.addMenu("mainMenu");
-    menus.setPrompt("mainMenu", "Main menu");
-    menus.addMenuOption("mainMenu", "Configure train departures", 1, "go trainMenu");
-    menus.addMenuOption("mainMenu", "Set time", 2, "time prompt");
-    menus.addMenuOption("mainMenu", "View information board", 3, "train informationBoard");
-    menus.addMenuOption("mainMenu", "Quit", 4, "quit");
+    menus.addMenu(MAIN_MENU);
+    menus.setPrompt(MAIN_MENU, "Main menu");
+    menus.addMenuOption(MAIN_MENU, "Configure train departures", 1, "go " + TRAIN_MENU);
+    menus.addMenuOption(MAIN_MENU, "Set time", 2, "time prompt");
+    menus.addMenuOption(MAIN_MENU, "View information board", 3, "train informationBoard");
+    menus.addMenuOption(MAIN_MENU, "Quit", 4, "quit");
 
-    menus.addMenu("trainMenu");
-    menus.addMenuOption("trainMenu", "Add departure", 1, "train add prompt");
-    menus.addMenuOption("trainMenu", "Edit departure", 2, "go editTrainMenu");
-    menus.addMenuOption("trainMenu", "Search departure", 3, "go trainSearchMenu");
-    menus.addMenuOption("trainMenu", "List all", 4, "train list");
-    menus.addMenuOption("trainMenu", "Main menu", 5, "go mainMenu");
+    menus.addMenu(TRAIN_MENU);
+    menus.addMenuOption(TRAIN_MENU, "Add departure", 1, "train add prompt");
+    menus.addMenuOption(TRAIN_MENU, "Edit departure", 2, "go " + EDIT_TRAIN_MENU);
+    menus.addMenuOption(TRAIN_MENU, "Search departure", 3, "go " + TRAIN_SEARCH_MENU);
+    menus.addMenuOption(TRAIN_MENU, "List all", 4, "train list");
+    menus.addMenuOption(TRAIN_MENU, "Main menu", 5, "go " + MAIN_MENU);
 
-    menus.addMenu("trainSearchMenu");
-    menus.addMenuOption("trainSearchMenu", "Search by train number", 1, "train search trainNumber prompt");
-    menus.addMenuOption("trainSearchMenu", "Search by destination", 2, "train search destination prompt");
-    menus.addMenuOption("trainSearchMenu", "Train Configuration", 3, "go trainMenu");
-    menus.addMenuOption("trainSearchMenu", "Main menu", 4, "go mainMenu");
+    menus.addMenu(TRAIN_SEARCH_MENU);
+    menus.addMenuOption(TRAIN_SEARCH_MENU, "Search by train number", 1, "train search trainNumber prompt");
+    menus.addMenuOption(TRAIN_SEARCH_MENU, "Search by destination", 2, "train search destination prompt");
+    menus.addMenuOption(TRAIN_SEARCH_MENU, "Train Configuration", 3, "go " + TRAIN_MENU);
+    menus.addMenuOption(TRAIN_SEARCH_MENU, "Main menu", 4, "go " + MAIN_MENU);
 
-    menus.addMenu("editTrainMenu");
-    menus.addMenuOption("editTrainMenu", "Add delay", 1, "train edit addDelay prompt");
-    menus.addMenuOption("editTrainMenu", "Set track", 2, "train edit setTrack prompt");
-    menus.addMenuOption("editTrainMenu", "Train Configuration", 3, "go trainMenu");
-    menus.addMenuOption("editTrainMenu", "Main menu", 4, "go mainMenu");
+    menus.addMenu(EDIT_TRAIN_MENU);
+    menus.addMenuOption(EDIT_TRAIN_MENU, "Add delay", 1, "train edit addDelay prompt");
+    menus.addMenuOption(EDIT_TRAIN_MENU, "Set track", 2, "train edit setTrack prompt");
+    menus.addMenuOption(EDIT_TRAIN_MENU, "Train Configuration", 3, "go " + TRAIN_MENU);
+    menus.addMenuOption(EDIT_TRAIN_MENU, "Main menu", 4, "go " + MAIN_MENU);
 
 
     trainDepartureRegistry.newTrainDeparture(10, "A4", "Trondheim", LocalTime.of(6, 15));
@@ -51,8 +57,13 @@ public class UserInterface {
   public void start() {
     System.out.println("Train Departure Application v1.0");
     while (!exit) {
-      String command = goToMenu(selectedMenu);
-      runCommand(command);
+      if (COMMAND_MODE) {
+        String command = UserInput.promptString("");
+        runCommand(command);
+      } else {
+        String command = goToMenu(selectedMenu);
+        runCommand(command);
+      }
     }
     System.out.println("\nExiting Train Departure Application...");
     System.exit(0);
@@ -205,7 +216,7 @@ public class UserInterface {
         timeCommand(commands);
         break;
       default:
-        System.out.println("\nUnknown command");
+        System.out.println(COMMAND_FAIL);
         break;
     }
   }
@@ -215,7 +226,11 @@ public class UserInterface {
   }
 
   private void quitCommand(String [] commands) {
-    exit = true;
+    if (commands.length == 1) {
+      exit = true;
+    } else {
+      System.out.println(COMMAND_FAIL);
+    }
   }
 
   private void trainCommand(String [] command) {
@@ -234,7 +249,7 @@ public class UserInterface {
         informationBoardCommand(command);
         break;
       default:
-        System.out.println("\nUnknown command");
+        System.out.println(COMMAND_FAIL);
         break;
     }
   }
@@ -244,12 +259,11 @@ public class UserInterface {
     if (nextCommandWord.equals("prompt")) {
       promptSetCurrentTime();
       waitForUser();
-    } else if (command.length == 4) {
-      String timeString = command[2];
-      LocalTime time = timeFromString(timeString);
+    } else if (command.length == 2) {
+      LocalTime time = timeFromString(nextCommandWord);
       setCurrentTime(time);
     } else {
-      System.out.println("\nUnknown command");
+      System.out.println(COMMAND_FAIL);
     }
   }
 
@@ -259,15 +273,15 @@ public class UserInterface {
     if (nextCommandWord.equals("prompt")) {
       promptAddDeparture();
       waitForUser();
-    } else if (command.length == 7) {
-      int trainNumber = Integer.parseInt(command[3]);
-      String line = command[4];
-      String destination = command[5];
-      String timeString = command[6];
+    } else if (command.length == 6) {
+      int trainNumber = Integer.parseInt(nextCommandWord);
+      String line = command[3];
+      String destination = command[4];
+      String timeString = command[5];
       LocalTime departureTime = timeFromString(timeString);
       addDeparture(trainNumber, line, destination, departureTime);
     } else {
-      System.out.println("\nUnknown command");
+      System.out.println(COMMAND_FAIL);
     }
   }
 
@@ -281,7 +295,7 @@ public class UserInterface {
         searchByDestinationCommand(command);
         break;
       default:
-        System.out.println("\nUnknown command");
+        System.out.println(COMMAND_FAIL);
         break;
     }
   }
@@ -296,7 +310,7 @@ public class UserInterface {
         setTrackCommand(command);
         break;
       default:
-        System.out.println("\nUnknown command");
+        System.out.println(COMMAND_FAIL);
         break;
     }
   }
@@ -312,11 +326,11 @@ public class UserInterface {
     if (nextCommandWord.equals("prompt")) {
       promptSearchByTrainNumber();
       waitForUser();
-    } else if (command.length == 5) {
-      int trainNumber = Integer.parseInt(command[4]);
+    } else if (command.length == 4) {
+      int trainNumber = Integer.parseInt(nextCommandWord);
       searchByTrainNumber(trainNumber);
     } else {
-      System.out.println("\nUnknown command");
+      System.out.println(COMMAND_FAIL);
     }
   }
 
@@ -325,11 +339,10 @@ public class UserInterface {
     if (nextCommandWord.equals("prompt")) {
       promptSearchByDestination();
       waitForUser();
-    } else if (command.length == 5) {
-      String destination = command[4];
-      searchByDestination(destination);
+    } else if (command.length == 4) {
+      searchByDestination(nextCommandWord);
     } else {
-      System.out.println("\nUnknown command");
+      System.out.println(COMMAND_FAIL);
     }
   }
 
@@ -339,12 +352,12 @@ public class UserInterface {
       promptAddDelay();
       waitForUser();
     } else if (command.length == 5) {
-      int trainNumber = Integer.parseInt(command[3]);
+      int trainNumber = Integer.parseInt(nextCommandWord);
       String delayString = command[4];
       int delay = Integer.parseInt(delayString);
       addDelay(trainNumber, delay);
     } else {
-      System.out.println("\nUnknown command");
+      System.out.println(COMMAND_FAIL);
     }
   }
 
@@ -354,11 +367,11 @@ public class UserInterface {
       promptSetTrack();
       waitForUser();
     } else if (command.length == 5) {
-      int trainNumber = Integer.parseInt(command[3]);
+      int trainNumber = Integer.parseInt(nextCommandWord);
       int track = Integer.parseInt(command[4]);
       setTrack(trainNumber, track);
     } else {
-      System.out.println("\nUnknown command");
+      System.out.println(COMMAND_FAIL);
     }
   }
 
@@ -437,7 +450,7 @@ public class UserInterface {
   }
 
   private int promptDelay() {
-    return UserInput.promptInt("\nEnter delay:");
+    return UserInput.promptInt("\nEnter delay to add in minutes:");
   }
 }
 
