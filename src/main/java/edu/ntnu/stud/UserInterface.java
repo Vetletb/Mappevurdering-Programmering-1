@@ -85,20 +85,26 @@ public class UserInterface {
     return success;
   }
 
-  private void setTrack(int trainNumber, int track) {
+  private boolean setTrack(int trainNumber, int track) {
+    boolean success = false;
     try {
-    trainDepartureRegistry.setTrack(trainNumber, track);
+      trainDepartureRegistry.setTrack(trainNumber, track);
+      success = true;
     } catch (IllegalArgumentException e) {
-      System.out.println("\n" + e.getMessage());
+      System.out.println("\n" + "Track not set, reason: " + e.getMessage());
     }
+    return success;
   }
 
-  private void addDelay(int trainNumber, int delay) {
+  private boolean addDelay(int trainNumber, int delay) {
+    boolean success = false;
     try {
-    trainDepartureRegistry.addDelay(trainNumber, delay);
+      trainDepartureRegistry.addDelay(trainNumber, delay);
+      success = true;
     } catch (IllegalArgumentException e) {
-      System.out.println("\n" + e.getMessage());
+      System.out.println("\n" + "Delay not added, reason: " + e.getMessage());
     }
+    return success;
   }
 
   private ArrayList<Integer> sortedTrainDepartures() {
@@ -116,7 +122,7 @@ public class UserInterface {
       System.out.println(departure);
       success = true;
     } catch (IllegalArgumentException e) {
-      System.out.println("\n" + e.getMessage());
+      System.out.println("\n" + "Train departure not found, reason: " + e.getMessage());
     }
     return success;
   }
@@ -165,13 +171,13 @@ public class UserInterface {
       updateDeparted();
       success = true;
     } catch (IllegalArgumentException e) {
-      System.out.println("\n" + "Time not set");
+      System.out.println("\n" + "Time not set, reason: " + e.getMessage());
     }
     return success;
   }
 
 
-  public LocalTime timeFromString(String timeString) {
+  private LocalTime timeFromString(String timeString) {
     LocalTime time = null;
     try {
       time = LocalTime.parse(timeString);
@@ -372,17 +378,21 @@ public class UserInterface {
   private void promptSetTrack() {
     int trainNumber = promptTrainNumber();
     int track = promptTrack();
-    setTrack(trainNumber, track);
-    System.out.println("\nUpdated train info:");
-    searchByTrainNumber(trainNumber);
+    boolean success = setTrack(trainNumber, track);
+    if (success) {
+      System.out.println("\nUpdated train info:");
+      searchByTrainNumber(trainNumber);
+    }
   }
 
   private void promptAddDelay() {
     int trainNumber = promptTrainNumber();
     int delay = promptDelay();
-    addDelay(trainNumber, delay);
-    System.out.println("\nUpdated train info:");
-    searchByTrainNumber(trainNumber);
+    boolean success = addDelay(trainNumber, delay);
+    if (success) {
+      System.out.println("\nUpdated train info:");
+      searchByTrainNumber(trainNumber);
+    }
   }
 
   private void promptSearchByTrainNumber() {
