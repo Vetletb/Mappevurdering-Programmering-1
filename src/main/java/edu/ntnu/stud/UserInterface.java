@@ -138,16 +138,17 @@ public class UserInterface {
         "Track",
         "Delay");
     System.out.println("-".repeat(75));
-    for (int trainNumber : sortedTrainDepartures()) {
-      HashMap<String, String> trainDepartureInfo = trainDepartureInfo(trainNumber);
-      System.out.printf("%-12s%-11s%-18s%-16s%-12s%-11s\n",
-          trainDepartureInfo.get("trainNumber"),
-          trainDepartureInfo.get("line"),
-          trainDepartureInfo.get("destination"),
-          trainDepartureInfo.get("departureTime"),
-          trainDepartureInfo.get("track"),
-          trainDepartureInfo.get("delay"));
-    }
+    sortedTrainDepartures().stream()
+        .map(this::trainDepartureInfo)
+        .forEach(info -> {
+          System.out.printf("%-12s%-11s%-18s%-16s%-12s%-11s\n",
+              info.get("trainNumber"),
+              info.get("line"),
+              info.get("destination"),
+              info.get("departureTime"),
+              info.get("track"),
+              info.get("delay"));
+        });
     System.out.println("-".repeat(75));
   }
 
