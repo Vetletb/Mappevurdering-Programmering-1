@@ -9,7 +9,12 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * This class represents a train departure registry.
+ * This class represents a train departure registry. It contains a HashMap of train departures
+ * and methods to manage them.
+ *
+ * @author 10065
+ * @version 1.0
+ * @since 0.2
  */
 public class TrainDepartureRegistry {
 
@@ -18,7 +23,9 @@ public class TrainDepartureRegistry {
   /**
    * Gets a train departure from train number.
    *
-   * @param trainNumber the train departures
+   * @param trainNumber the train number of the train departure
+   * @return the train departure with the train number
+   * @throws IllegalArgumentException if train number is not in registry
    */
   private TrainDeparture getTrainDeparture(int trainNumber) {
     validateTrainNumberExistence(trainNumber);
@@ -26,12 +33,16 @@ public class TrainDepartureRegistry {
   }
 
   /**
-   * Creates and adds a new train departure.
+   * Creates and adds a new train departure, utilizes {@link #addTrainDeparture(TrainDeparture)}.
    *
    * @param trainNumber   the train number
    * @param line          the line
    * @param destination   the destination
    * @param departureTime the departure time
+   * @throws IllegalArgumentException if train number is zero or less
+   * @throws IllegalArgumentException if line is blank
+   * @throws IllegalArgumentException if destination is blank
+   * @throws IllegalArgumentException if departure time is null
    */
   public void newTrainDeparture(int trainNumber, String line, String destination,
                                 LocalTime departureTime) {
@@ -43,6 +54,7 @@ public class TrainDepartureRegistry {
    * Adds a train departure to registry.
    *
    * @param trainDeparture the train departure
+   * @throws IllegalArgumentException if train number already exists
    */
   private void addTrainDeparture(TrainDeparture trainDeparture) {
     if (containsTrainDeparture(trainDeparture)) {
@@ -51,11 +63,27 @@ public class TrainDepartureRegistry {
     trainDepartures.put(trainDeparture.getTrainNumber(), trainDeparture);
   }
 
+  /**
+   * Adds delay to train departure from train number.
+   *
+   * @param trainNumber the train number of the train departure
+   * @param delay       the delay
+   * @throws IllegalArgumentException if train number is not in registry
+   * @throws IllegalArgumentException if delay is zero or less
+   */
   public void addDelay(int trainNumber, int delay) {
     validateTrainNumberExistence(trainNumber);
     trainDepartures.get(trainNumber).addDelay(delay);
   }
 
+  /**
+   * Sets track to train departure from train number.
+   *
+   * @param trainNumber the train number of the train departure
+   * @param track       the track
+   * @throws IllegalArgumentException if train number is not in registry
+   * @throws IllegalArgumentException if track is zero or less, unless -1
+   */
   public void setTrack(int trainNumber, int track) {
     validateTrainNumberExistence(trainNumber);
     trainDepartures.get(trainNumber).setTrack(track);
@@ -63,27 +91,31 @@ public class TrainDepartureRegistry {
 
 
   /**
-   * Checks if registry contains train departure.
+   * Checks if registry contains train departure, utilizes {@link #containsTrainNumber(int)}.
    *
-   * @param trainDeparture the train departure
+   * @param trainDeparture the train departure to check
+   * @return true if registry contains train departure
    */
   public boolean containsTrainDeparture(TrainDeparture trainDeparture) {
     return containsTrainNumber(trainDeparture.getTrainNumber());
   }
 
   /**
-   * Checks if registry contains train number.
+   * Checks if registry contains train departure with train number.
    *
-   * @param trainNumber the train number
+   * @param trainNumber the train number to check
+   * @return true if registry contains train departure with train number
    */
   public boolean containsTrainNumber(int trainNumber) {
     return trainDepartures.containsKey(trainNumber);
   }
 
   /**
-   * Validates train number presence.
+   * Validates train departure presence from train number,
+   * utilizes {@link #containsTrainNumber(int)}.
    *
-   * @param trainNumber the train number
+   * @param trainNumber the train number to check
+   * @throws IllegalArgumentException if train number is not in registry
    */
   public void validateTrainNumberExistence(int trainNumber) {
     if (!containsTrainNumber(trainNumber)) {
@@ -92,21 +124,10 @@ public class TrainDepartureRegistry {
   }
 
   /**
-   * Validates train departure presence.
-   *
-   * @param trainDeparture the train departure
-   */
-  public void validateTrainDepartureExistence(TrainDeparture trainDeparture) {
-    if (!containsTrainDeparture(trainDeparture)) {
-      throw new IllegalArgumentException("Train departure is not in the registry");
-    }
-  }
-
-
-  /**
-   * Deletes a train departure.
+   * Deletes a train departure from train number.
    *
    * @param trainNumber the train number
+   * @throws IllegalArgumentException if train number is not in registry
    */
   public void removeTrainDeparture(int trainNumber) {
     validateTrainNumberExistence(trainNumber);
@@ -116,7 +137,8 @@ public class TrainDepartureRegistry {
   /**
    * Deletes train departures before time.
    *
-   * @param time the time
+   * @param time the time to delete before
+   * @throws IllegalArgumentException if time is null
    */
   public void removeTrainDeparturesBeforeTime(LocalTime time) {
     Validation.validateNotNull(time, "Time");
@@ -129,9 +151,10 @@ public class TrainDepartureRegistry {
 
 
   /**
-   * Creates train departure registry filtered from destination.
+   * Creates new train departure registry filtered from destination.
    *
-   * @param destination the destination
+   * @param destination the destination to filter from
+   * @throws IllegalArgumentException if destination is blank
    */
   public TrainDepartureRegistry trainDeparturesByDestination(String destination) {
     Validation.validateStringNotBlank(destination, "Destination");
@@ -154,20 +177,34 @@ public class TrainDepartureRegistry {
         .collect(Collectors.toCollection(ArrayList::new));
   }
 
+  /**
+   * Returns a string representation of the train departure from train number.
+   *
+   * @param trainNumber the train number
+   * @return a string representation of the train departure from train number
+   * @throws IllegalArgumentException if train number is not in registry
+   */
   public String trainDepartureString(int trainNumber) {
     validateTrainNumberExistence(trainNumber);
     return getTrainDeparture(trainNumber).toString();
   }
 
+  /**
+   * Returns a HashMap of information about the train departure from train number.
+   *
+   * @param trainNumber the train number of the train departure
+   * @return a Hashmap of information about the train departure from train number
+   * @throws IllegalArgumentException if train number is not in registry
+   */
   public HashMap<String, String> getAllFromTrainNumber(int trainNumber) {
     validateTrainNumberExistence(trainNumber);
     return trainDepartures.get(trainNumber).trainInfo();
   }
 
   /**
-   * Returns a list of train numbers sorted by departure time.
+   * Returns a string representation of the train departure registry.
    *
-   * @return a list of train numbers sorted by departure time
+   * @return a string representation of the train departure registry
    */
   @Override
   public String toString() {
@@ -175,6 +212,5 @@ public class TrainDepartureRegistry {
         .map(TrainDeparture::toString)
         .collect(Collectors.joining("\n"));
   }
-
 }
 

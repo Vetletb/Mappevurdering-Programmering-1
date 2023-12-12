@@ -4,7 +4,12 @@ import java.time.LocalTime;
 import java.util.HashMap;
 
 /**
- * This class represents a train departure.
+ * This class represents a train departure. It contains information about
+ * the train departure, constructors, getters and relevant setters.
+ *
+ * @author 10065
+ * @version 1.0
+ * @since 0.1
  */
 public class TrainDeparture {
   private final int trainNumber;
@@ -15,13 +20,19 @@ public class TrainDeparture {
   private int track;
 
   /**
-   * Creates a new train departure.
+   * Constructor for train departure, creates a new train departure, after validating the input.
    *
    * @param trainNumber   the train number
    * @param line          the line
    * @param destination   the destination
    * @param departureTime the departure time
    * @param track         the track
+   * @throws IllegalArgumentException if train number is zero or less
+   * @throws IllegalArgumentException if line is blank
+   * @throws IllegalArgumentException if destination is blank
+   * @throws IllegalArgumentException if departure time is null
+   * @throws IllegalArgumentException if track is zero or less, unless -1
+   * @throws IllegalArgumentException if delay is negative
    */
   public TrainDeparture(int trainNumber, String line, String destination,
                         LocalTime departureTime, int delay, int track) {
@@ -40,12 +51,18 @@ public class TrainDeparture {
   }
 
   /**
-   * Creates a new train departure.
+   * Creates a new train departure. Utilizes the other constructor
+   * {@link #TrainDeparture(int, String, String, LocalTime, int, int)},
+   * and sets delay to zero and track to -1.
    *
    * @param trainNumber   the train number
    * @param line          the line
    * @param destination   the destination
    * @param departureTime the departure time
+   * @throws IllegalArgumentException if train number is zero or less
+   * @throws IllegalArgumentException if line is blank
+   * @throws IllegalArgumentException if destination is blank
+   * @throws IllegalArgumentException if departure time is null
    */
   public TrainDeparture(int trainNumber, String line, String destination,
                         LocalTime departureTime) {
@@ -108,19 +125,21 @@ public class TrainDeparture {
 
 
   /**
-   * Sets the delay.
+   * Sets the delay after validating parameter.
    *
    * @param delay the delay
+   * @throws IllegalArgumentException if delay is negative
    */
   private void setDelay(int delay) {
-    Validation.validatePositiveNumber(delay, "Delay");
+    Validation.validateZeroOrPositiveNumber(delay, "Delay");
     this.delay = delay;
   }
 
   /**
-   * Sets the track.
+   * Sets the track after validating parameter.
    *
    * @param track the track
+   * @throws IllegalArgumentException if track is zero or less, unless -1
    */
   public void setTrack(int track) {
     Validation.validatePositiveUnlessNegativeOne(track, "Track");
@@ -129,9 +148,10 @@ public class TrainDeparture {
 
 
   /**
-   * Adds a delay to the train departure.
+   * Adds delay to the train departure, utilizes {@link #setDelay(int)}.
    *
    * @param delay the delay
+   * @throws IllegalArgumentException if delay is zero or less
    */
   public void addDelay(int delay) {
     Validation.validatePositiveNumber(delay, "Delay");
@@ -147,6 +167,11 @@ public class TrainDeparture {
     return departureTime.plusMinutes(delay);
   }
 
+  /**
+   * Gets the train info as HashMap.
+   *
+   * @return the train info
+   */
   public HashMap<String, String> trainInfo() {
     HashMap<String, String> trainInfo = new HashMap<>();
     trainInfo.put("departureTime", departureTime.toString());
@@ -174,13 +199,11 @@ public class TrainDeparture {
    */
   @Override
   public String toString() {
-    var sb = new StringBuilder();
-    sb.append("Departure time: ").append(departureTime).append("\n");
-    sb.append("Line: ").append(line).append("\n");
-    sb.append("Train number: ").append(trainNumber).append("\n");
-    sb.append("Destination: ").append(destination).append("\n");
-    sb.append("Delay: ").append(delay).append("\n");
-    sb.append("Track: ").append(track).append("\n");
-    return sb.toString();
+    return  "Departure time: " + departureTime + "\n"
+        + "Line: " + line + "\n"
+        + "Train number: " + trainNumber + "\n"
+        + "Destination: " + destination + "\n"
+        + "Delay: " + delay + "\n"
+        + "Track: " + track + "\n";
   }
 }

@@ -5,23 +5,34 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * This class represents the user interface. It contains methods for running the application.
+ * It handles user interaction and processes commands.
+ */
 public class UserInterface {
   private final MenuBuilder menus = new MenuBuilder();
   private final TrainDepartureRegistry trainDepartureRegistry = new TrainDepartureRegistry();
 
+  // default values
   private LocalTime currentTime = LocalTime.of(0, 0);
   private String selectedMenu = MAIN_MENU;
   private boolean exit = false;
 
+  // whether to use menu or command mode
   private static final boolean COMMAND_MODE = false;
 
+  // constants for menu names
   private static final String MAIN_MENU = "mainMenu";
   private static final String TRAIN_MENU = "trainMenu";
   private static final String TRAIN_SEARCH_MENU = "trainSearchMenu";
   private static final String EDIT_TRAIN_MENU = "trainEditMenu";
+  // constants for frequently used strings
   private static final String COMMAND_UNKNOWN_MESSAGE = "\nCommand unknown";
   private static final String COMMAND_SUCCESS_MESSAGE = "\nCommand successful";
 
+  /**
+   * Initializes the user interface, creates menus and adds menu options.
+   */
   public void init() {
     menus.addMenu(MAIN_MENU);
     menus.setPrompt(MAIN_MENU, "Main menu");
@@ -38,8 +49,10 @@ public class UserInterface {
     menus.addMenuOption(TRAIN_MENU, "Main menu", 5, "go " + MAIN_MENU);
 
     menus.addMenu(TRAIN_SEARCH_MENU);
-    menus.addMenuOption(TRAIN_SEARCH_MENU, "Search by train number", 1, "train search trainNumber prompt");
-    menus.addMenuOption(TRAIN_SEARCH_MENU, "Search by destination", 2, "train search destination prompt");
+    menus.addMenuOption(TRAIN_SEARCH_MENU, "Search by train number", 1,
+        "train search trainNumber prompt");
+    menus.addMenuOption(TRAIN_SEARCH_MENU, "Search by destination", 2,
+        "train search destination prompt");
     menus.addMenuOption(TRAIN_SEARCH_MENU, "Train Configuration", 3, "go " + TRAIN_MENU);
     menus.addMenuOption(TRAIN_SEARCH_MENU, "Main menu", 4, "go " + MAIN_MENU);
 
@@ -49,7 +62,7 @@ public class UserInterface {
     menus.addMenuOption(EDIT_TRAIN_MENU, "Train Configuration", 3, "go " + TRAIN_MENU);
     menus.addMenuOption(EDIT_TRAIN_MENU, "Main menu", 4, "go " + MAIN_MENU);
 
-
+    // train departures for testing
     trainDepartureRegistry.newTrainDeparture(10, "A4", "Trondheim", LocalTime.of(6, 15));
     trainDepartureRegistry.newTrainDeparture(4, "A7", "Oslo", LocalTime.of(14, 45));
     trainDepartureRegistry.newTrainDeparture(54, "F6", "Bergen", LocalTime.of(6, 0));
@@ -58,6 +71,9 @@ public class UserInterface {
     trainDepartureRegistry.newTrainDeparture(16, "G8", "Fredrikstad", LocalTime.of(5, 50));
   }
 
+  /**
+   * Starts the user interface, runs the application.
+   */
   public void start() {
     System.out.println("Train Departure Application v1.0");
     while (!exit) {
@@ -74,6 +90,12 @@ public class UserInterface {
   }
 
 
+  /**
+   * Displays a menu and prompts the user to chose option.
+   *
+   * @param menuName the name of the menu to display
+   * @return the command to run
+   */
   private String goToMenu(String menuName) {
     System.out.println("\n");
     System.out.println("Current time " + currentTime);
@@ -82,12 +104,25 @@ public class UserInterface {
     return menus.selectOption(menuName, choice);
   }
 
+  /**
+   * Waits for user to press enter.
+   */
   private void waitForUser() {
     UserInput.promptString("\nPress enter to continue...");
   }
 
 
-  private boolean addDeparture(int trainNumber, String line, String destination, LocalTime departureTime) {
+  /**
+   * Adds a new train departure to the registry.
+   *
+   * @param trainNumber   the train number
+   * @param line          the line
+   * @param destination   the destination
+   * @param departureTime the departure time
+   * @return true if train departure was added successfully, false otherwise
+   */
+  private boolean addDeparture(int trainNumber, String line, String destination,
+                               LocalTime departureTime) {
     boolean success = false;
     try {
       Validation.validateNotNull(departureTime, "Departure time");
@@ -100,6 +135,13 @@ public class UserInterface {
     return success;
   }
 
+  /**
+   * Sets the track of a train departure from train number.
+   *
+   * @param trainNumber the train number of the train departure
+   * @param track       the track to set
+   * @return true if track was set successfully, false otherwise
+   */
   private boolean setTrack(int trainNumber, int track) {
     boolean success = false;
     try {
@@ -111,6 +153,13 @@ public class UserInterface {
     return success;
   }
 
+  /**
+   * Adds delay to a train departure from train number.
+   *
+   * @param trainNumber the train number of the train departure
+   * @param delay       the delay to add
+   * @return true if delay was added successfully, false otherwise
+   */
   private boolean addDelay(int trainNumber, int delay) {
     boolean success = false;
     try {
@@ -122,14 +171,30 @@ public class UserInterface {
     return success;
   }
 
+  /**
+   * Returns a sorted list of train departures.
+   *
+   * @return a sorted list of train departures
+   */
   private ArrayList<Integer> sortedTrainDepartures() {
     return trainDepartureRegistry.sortedByDepartureTime();
   }
 
+  /**
+   * Returns a HashMap with train departure information from train number.
+   *
+   * @param trainNumber the train number of the train departure
+   * @return a HashMap with train departure information
+   */
   private HashMap<String, String> trainDepartureInfo(int trainNumber) {
     return trainDepartureRegistry.getAllFromTrainNumber(trainNumber);
   }
 
+  /**
+   * Searches for a train departure from train number and prints the result.
+   *
+   * @param trainNumber the train number of the train departure
+   */
   private void searchByTrainNumber(int trainNumber) {
     try {
       String departure = trainDepartureRegistry.trainDepartureString(trainNumber);
@@ -139,12 +204,20 @@ public class UserInterface {
     }
   }
 
+  /**
+   * Searches for train departures from destination and prints the result.
+   *
+   * @param destination the destination of the train departures
+   */
   private void searchByDestination(String destination) {
     TrainDepartureRegistry trainDepartures = trainDepartureRegistry
         .trainDeparturesByDestination(destination);
     System.out.println(trainDepartures);
   }
 
+  /**
+   * Prints the train departures in the form of an information board.
+   */
   private void printInformationBoard() {
     System.out.printf("%-56s%s\n", "Information board", "Current time " + currentTime);
     System.out.println("-".repeat(75));
@@ -168,10 +241,19 @@ public class UserInterface {
     System.out.println("-".repeat(75));
   }
 
+  /**
+   * Removes train departures before current time.
+   */
   private void updateDeparted() {
     trainDepartureRegistry.removeTrainDeparturesBeforeTime(currentTime);
   }
 
+  /**
+   * Sets the current time.
+   *
+   * @param time the time to set
+   * @return true if time was set successfully, false otherwise
+   */
   private boolean setCurrentTime(LocalTime time) {
     boolean success = false;
     try {
@@ -187,6 +269,12 @@ public class UserInterface {
   }
 
 
+  /**
+   * Parses a string to LocalTime.
+   *
+   * @param timeString the string to parse
+   * @return the parsed LocalTime
+   */
   private LocalTime timeFromString(String timeString) {
     LocalTime time = null;
     try {
@@ -198,6 +286,11 @@ public class UserInterface {
   }
 
 
+  /**
+   * Starts to process a command.
+   *
+   * @param command the command to run
+   */
   private void runCommand(String command) {
     String [] commands = command.split(" ");
     String primaryCommand = commands[0];
@@ -220,10 +313,20 @@ public class UserInterface {
     }
   }
 
+  /**
+   * Selects menu from command.
+   *
+   * @param commands the command (go "menuName")
+   */
   private void goCommand(String [] commands) {
     selectedMenu = commands[1];
   }
 
+  /**
+   * Tells the application to quit.
+   *
+   * @param commands the command (exit)
+   */
   private void quitCommand(String [] commands) {
     if (commands.length == 1) {
       exit = true;
@@ -232,6 +335,11 @@ public class UserInterface {
     }
   }
 
+  /**
+   * Processes commands for train departures.
+   *
+   * @param command the command to run
+   */
   private void trainCommand(String [] command) {
     String nextCommandWord = command[1];
     switch (nextCommandWord) {
@@ -256,6 +364,11 @@ public class UserInterface {
     }
   }
 
+  /**
+   * Prompts the user to set the current time or sets the current time from command.
+   *
+   * @param command the command (time prompt or time "HH:mm")
+   */
   private void timeCommand(String [] command) {
     String nextCommandWord = command[1];
     if (nextCommandWord.equals("prompt")) {
@@ -272,7 +385,12 @@ public class UserInterface {
     }
   }
 
-
+  /**
+   * Prompts the user to add a train departure or adds a train departure from command.
+   *
+   * @param command the command (train add prompt or
+   *                train add "trainNumber" "line" "destination" "HH:mm")
+   */
   private void trainAddCommand(String [] command) {
     String nextCommandWord = command[2];
     if (nextCommandWord.equals("prompt")) {
@@ -293,6 +411,11 @@ public class UserInterface {
     }
   }
 
+  /**
+   * Processes commands for train search.
+   *
+   * @param command the command to run
+   */
   private void trainSearchCommand(String [] command) {
     String searchType = command[2];
     switch (searchType) {
@@ -308,6 +431,11 @@ public class UserInterface {
     }
   }
 
+  /**
+   * Processes commands for editing train departures.
+   *
+   * @param command the command to run
+   */
   private void editTrainCommand(String [] command) {
     String nextCommandWord = command[2];
     switch (nextCommandWord) {
@@ -323,6 +451,11 @@ public class UserInterface {
     }
   }
 
+  /**
+   * Displays the information board from command.
+   *
+   * @param command the command (train informationBoard)
+   */
   private void informationBoardCommand(String [] command) {
     if (command.length == 2) {
       System.out.println(COMMAND_UNKNOWN_MESSAGE);
@@ -334,6 +467,11 @@ public class UserInterface {
     }
   }
 
+  /**
+   * Displays the list of train departures from command.
+   *
+   * @param command the command (train list)
+   */
   private void trainListCommand(String [] command) {
     if (command.length == 2) {
       System.out.println("\nTrain departures:\n");
@@ -344,6 +482,12 @@ public class UserInterface {
     }
   }
 
+  /**
+   * Prompts the user to search for a train departure by train number or searches by command.
+   *
+   * @param command the command (train search trainNumber prompt or
+   *                train search trainNumber "number")
+   */
   private void searchByTrainNumberCommand(String [] command) {
     String nextCommandWord = command[3];
     if (nextCommandWord.equals("prompt")) {
@@ -357,6 +501,12 @@ public class UserInterface {
     }
   }
 
+  /**
+   * Prompts the user to search for train departures by destination or searches by command.
+   *
+   * @param command the command (train search destination prompt or
+   *                train search destination "destination")
+   */
   private void searchByDestinationCommand(String [] command) {
     String nextCommandWord = command[3];
     if (nextCommandWord.equals("prompt")) {
@@ -369,6 +519,12 @@ public class UserInterface {
     }
   }
 
+  /**
+   * Prompts the user to add delay to a train departure or adds delay from command.
+   *
+   * @param command the command (train edit addDelay prompt or
+   *                train edit addDelay "trainNumber" "delay")
+   */
   private void addDelayCommand(String [] command) {
     String nextCommandWord = command[3];
     if (nextCommandWord.equals("prompt")) {
@@ -387,6 +543,12 @@ public class UserInterface {
     }
   }
 
+  /**
+   * Prompts the user to set the track of a train departure or sets the track from command.
+   *
+   * @param command the command (train edit setTrack prompt or
+   *                train edit setTrack "trainNumber" "track")
+   */
   private void setTrackCommand(String [] command) {
     String nextCommandWord = command[3];
     if (nextCommandWord.equals("prompt")) {
@@ -405,6 +567,9 @@ public class UserInterface {
   }
 
 
+  /**
+   * Prompts the user to add a train departure.
+   */
   private void promptAddDeparture() {
     int trainNumber = promptTrainNumber();
     String line = promptLine();
@@ -417,6 +582,9 @@ public class UserInterface {
     }
   }
 
+  /**
+   * Prompts the user to set the track of a train departure.
+   */
   private void promptSetTrack() {
     int trainNumber = promptTrainNumber();
     int track = promptTrack();
@@ -427,6 +595,9 @@ public class UserInterface {
     }
   }
 
+  /**
+   * Prompts the user to add delay to a train departure.
+   */
   private void promptAddDelay() {
     int trainNumber = promptTrainNumber();
     int delay = promptDelay();
@@ -437,18 +608,27 @@ public class UserInterface {
     }
   }
 
+  /**
+   * Prompts the user to search for a train departure by train number.
+   */
   private void promptSearchByTrainNumber() {
     int trainNumber = promptTrainNumber();
     System.out.println("\nTrain departure info:");
     searchByTrainNumber(trainNumber);
   }
 
+  /**
+   * Prompts the user to search for train departures by destination.
+   */
   private void promptSearchByDestination() {
     String destination = promptDestination();
     System.out.println("\nTrain departures to " + destination + ":");
     searchByDestination(destination);
   }
 
+  /**
+   * Prompts the user to set the current time.
+   */
   private void promptSetCurrentTime() {
     LocalTime time = promptTime();
     boolean success = setCurrentTime(time);
@@ -457,27 +637,45 @@ public class UserInterface {
     }
   }
 
+  /**
+   * Prompts the user for a train number.
+   */
   private int promptTrainNumber() {
     return UserInput.promptInt("\nEnter train number:");
   }
 
+  /**
+   * Prompts the user for a time.
+   */
   private LocalTime promptTime() {
     String timeString = UserInput.promptString("\nEnter time (format HH:mm):");
     return timeFromString(timeString);
   }
 
+  /**
+   * Prompts the user for a destination.
+   */
   private String promptDestination() {
     return UserInput.promptString("\nEnter destination:");
   }
 
+  /**
+   * Prompts the user for a line.
+   */
   private String promptLine() {
     return UserInput.promptString("\nEnter line:");
   }
 
+  /**
+   * Prompts the user for a track.
+   */
   private int promptTrack() {
     return UserInput.promptInt("\nEnter track:");
   }
 
+  /**
+   * Prompts the user for a delay.
+   */
   private int promptDelay() {
     return UserInput.promptInt("\nEnter delay to add in minutes:");
   }
