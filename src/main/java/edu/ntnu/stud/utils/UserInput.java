@@ -1,9 +1,13 @@
-package edu.ntnu.stud;
+package edu.ntnu.stud.utils;
 
 import java.util.Scanner;
 
 /**
  * This class represents user input. It contains methods for reading input from the user.
+ *
+ * @author 10065
+ * @version 1.0
+ * @since 1.0
  */
 public class UserInput {
   private static final Scanner scanner = new Scanner(System.in);

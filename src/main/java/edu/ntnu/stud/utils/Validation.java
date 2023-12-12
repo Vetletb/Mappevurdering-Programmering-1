@@ -1,9 +1,13 @@
-package edu.ntnu.stud;
+package edu.ntnu.stud.utils;
 
 import java.time.LocalTime;
 
 /**
  * This class contains methods for validating input.
+ *
+ * @author 10065
+ * @version 1.0
+ * @since 1.0
  */
 public class Validation {
 

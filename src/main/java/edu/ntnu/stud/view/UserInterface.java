@@ -1,5 +1,8 @@
-package edu.ntnu.stud;
+package edu.ntnu.stud.view;
 
+import edu.ntnu.stud.utils.UserInput;
+import edu.ntnu.stud.utils.Validation;
+import edu.ntnu.stud.models.TrainDepartureRegistry;
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -8,6 +11,10 @@ import java.util.HashMap;
 /**
  * This class represents the user interface. It contains methods for running the application.
  * It handles user interaction and processes commands.
+ *
+ * @author 10065
+ * @version 1.0
+ * @since 1.0
  */
 public class UserInterface {
   private final MenuBuilder menus = new MenuBuilder();

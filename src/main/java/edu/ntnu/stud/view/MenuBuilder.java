@@ -1,9 +1,13 @@
-package edu.ntnu.stud;
+package edu.ntnu.stud.view;
 
 import java.util.HashMap;
 
 /**
  * This class represents a menu builder. It contains a map of menus and methods to manage them.
+ *
+ * @author 10065
+ * @version 1.0
+ * @since 1.0
  */
 public class MenuBuilder {
   private final HashMap<String, Menu> menus = new HashMap<>();

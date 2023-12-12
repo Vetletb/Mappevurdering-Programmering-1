@@ -1,7 +1,11 @@
-package edu.ntnu.stud;
+package edu.ntnu.stud.view;
 
 /**
  * This class represents a menu option.
+ *
+ * @author 10065
+ * @version 1.0
+ * @since 1.0
  */
 public class MenuOption {
   private final String option;

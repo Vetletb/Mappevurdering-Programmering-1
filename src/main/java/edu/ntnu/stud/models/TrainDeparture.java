@@ -1,5 +1,6 @@
-package edu.ntnu.stud;
+package edu.ntnu.stud.models;
 
+import edu.ntnu.stud.utils.Validation;
 import java.time.LocalTime;
 import java.util.HashMap;
 

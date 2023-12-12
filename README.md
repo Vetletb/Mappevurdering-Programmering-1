@@ -1,31 +1,43 @@
 # Portfolio project IDATA1003 - 2023
-This file uses Mark Down syntax. For more information see [here](https://www.markdownguide.org/basic-syntax/).
 
-STUDENT NAME = "Your name"  
-STUDENT ID = "Your ID"
+
+STUDENT NAME = Vetle Traran Bjørnøy
+STUDENT ID = 10065
 
 ## Project description
 
-[//]: # (TODO: Write a short description of your project/product here.)
+A train dispatch application that dispatch trains from one station
 
 ## Project structure
 
-[//]: # (TODO: Describe the structure of your project here. How have you used packages in your structure. Where are all sourcefiles stored. Where are all JUnit-test classes stored. etc.)
+src--main--java--edu.ntnu.stud--app--TrainDispatchApp.java
+                                models--TrainDispatch.java
+                                       --TrainDispatchRegistry.java
+                                utils--UserInput.java
+                                     --Validation.java
+                                view--Menu.java
+                                    --MenuOption.java
+                                    --MenuBuilder.java
+                                    --UserInterface.java
+test--java--edu.ntnu.stud--TrainDispatchTest.java
+                         --TrainDispatchRegistryTest.java
+
 
 ## Link to repository
 
-[//]: # (TODO: Include a link to your repository here.)
+https://github.com/Vetletb/Mappevurdering-Programmering-1
 
 ## How to run the project
 
-[//]: # (TODO: Describe how to run your project here. What is the main class? What is the main method?
-What is the input and output of the program? What is the expected behaviour of the program?)
+Compile and run the TrainDispatchApp.java file
 
 ## How to run the tests
 
-[//]: # (TODO: Describe how to run the tests here.)
+Compile and run the TrainDispatchTest.java file
+Compile and run the TrainDispatchRegistryTest.java file
 
 ## References
 
-[//]: # (TODO: Include references here, if any. For example, if you have used code from the course book, include a reference to the chapter.
-Or if you have used code from a website or other source, include a link to the source.)
+https://github.com/henrikhaus/IDATT1003-2023-Mappe-TrainDispatchSystem
+
+https://github.com/silentdragoon/Zuul

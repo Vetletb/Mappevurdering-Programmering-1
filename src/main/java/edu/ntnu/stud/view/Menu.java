@@ -1,9 +1,14 @@
-package edu.ntnu.stud;
+package edu.ntnu.stud.view;
 
+import edu.ntnu.stud.view.MenuOption;
 import java.util.ArrayList;
 
 /**
  * This class represents a menu. It contains a list of menu options and methods to manage them.
+ *
+ * @author 10065
+ * @version 1.0
+ * @since 1.0
  */
 public class Menu {
 

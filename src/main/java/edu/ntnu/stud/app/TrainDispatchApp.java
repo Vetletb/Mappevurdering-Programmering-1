@@ -1,4 +1,6 @@
-package edu.ntnu.stud;
+package edu.ntnu.stud.app;
+
+import edu.ntnu.stud.view.UserInterface;
 
 /**
  * This is the main class for the train dispatch application.
